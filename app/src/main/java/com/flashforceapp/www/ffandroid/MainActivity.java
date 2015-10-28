@@ -1,14 +1,23 @@
 package com.flashforceapp.www.ffandroid;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.net.NetworkInfo;
+import android.net.ConnectivityManager;
+
+import java.io.BufferedInputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 
 public class MainActivity extends AppCompatActivity {
+    public double avgOffset = 0.0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,4 +77,28 @@ public class MainActivity extends AppCompatActivity {
         //intent.putExtra(EXTRA_MESSAGE, message);
         startActivity(intent);
     }
+
+    public void performSync(){
+
+        ConnectivityManager connMgr = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            // fetch data
+            URL url = new URL("http://alignthebeat.appspot.com");
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            try {
+                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+                readStream(in);
+            }
+            finally {
+                urlConnection.disconnect();
+            }
+
+        } else {
+            // display error
+        }
+
+    }
+
 }
