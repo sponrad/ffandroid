@@ -7,7 +7,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
+
+
 public class FlashActivity extends AppCompatActivity {
+
+    private double interval = 0.25;
+    private int color = 0;
+    private String[] givenColors = {"D4001F", "FFFFFF", "000000"};   //default bulls colors for testing
+    private ArrayList<String> colors = new ArrayList<String>();
+    private double[] brightnessArray = new double[0];
+    private Timer timer = new Timer();
+    private String givenTiming = "6_4_2";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,8 +35,37 @@ public class FlashActivity extends AppCompatActivity {
         View root = someView.getRootView();
 
         // Set the color
-        root.getBackground().setColorFilter(Color.parseColor("#0000FF"));
-        //root.setBackgroundColor(getResources().getColor(android.R.color.red));
+        //root.getBackground().setColorFilter(Color.parseColor("#424242"));
+        root.setBackgroundColor(Color.parseColor(colors.get(color)));
+
+        String[] splitTiming = givenTiming.split("_");    //contains number of beats for each color
+
+        for (int i = 0; i < givenColors.length; i++) {
+            for (int j=0; j < Integer.parseInt(splitTiming[i]); j++){
+                colors.add(givenColors[i]);
+            }
+        }
+
+        class updateTask extends TimerTask {
+            public void run(){
+            //change the background color based on the array contents and value of color iterator
+                color += 1;
+                if (color == colors.size()){
+                    color = 0;
+                }
+                View someView = findViewById(R.id.flash_handler);
+                View root = someView.getRootView();
+                root.setBackgroundColor(Color.parseColor(colors.get(color)));
+            }
+        };
+
+        //timer.schedule(task, delay, period)
+        //timer.schedule( new performClass(), 1000, 30000 );
+        // or you can write in another way
+        //timer.scheduleAtFixedRate(task, delay, period);
+        timer.scheduleAtFixedRate(new updateTask(), 0, 250 );
+
+
     }
 
     @Override
@@ -47,4 +89,5 @@ public class FlashActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }
