@@ -4,16 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.net.NetworkInfo;
 import android.net.ConnectivityManager;
 
-import java.io.BufferedInputStream;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.io.IOException;
+import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -69,7 +68,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /** Called when the user clicks the Flash button */
-    public void sendMessage(View view) {
+    public void flash_handler(View view) {
+        Log.d("log", "flash_handler called");
         // Do something in response to button
         Intent intent = new Intent(this, FlashActivity.class);
         //EditText editText = (EditText) findViewById(R.id.edit_message);
@@ -78,27 +78,16 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void performSync(){
+    public void performSync() {
 
         ConnectivityManager connMgr = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
             // fetch data
-            URL url = new URL("http://alignthebeat.appspot.com");
-            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-            try {
-                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-                readStream(in);
-            }
-            finally {
-                urlConnection.disconnect();
-            }
 
-        } else {
-            // display error
+
         }
-
     }
 
 }

@@ -65,7 +65,6 @@ public class FlashActivity extends AppCompatActivity {
         //timer.scheduleAtFixedRate(task, delay, period);
         timer.scheduleAtFixedRate(new updateTask(), 0, 250 );
 
-
     }
 
     @Override
