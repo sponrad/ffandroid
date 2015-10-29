@@ -64,7 +64,7 @@
         android:textAllCaps="false"
         android:text="Flash"
         android:textColor="#FFFFFF"
-        android:gravit="center"
+        android:gravity="center"
         android:textSize="@dimen/button_text_size"
         android:onClick="flash_handler"
         />
