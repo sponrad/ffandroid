@@ -22,6 +22,7 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -101,74 +102,52 @@ public class MainActivity extends AppCompatActivity {
 
     public void checkDatabase(){
         if (ffdbLoaded == false) {
-            loadDatabase();
+            try {
+                loadDatabase();
+            }
+            catch(IOException e){
+                //report on this
+            }
         }
         else {
         }
     }
 
-    public void loadDatabase(){
-        String mCSVfile = "file.csv";
-        AssetManager manager = context.getAssets();
-        InputStream inStream = null;
-        try {
-            inStream = manager.open(mCSVfile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void loadDatabase() throws IOException{
+        SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
 
-        BufferedReader buffer = new BufferedReader(new InputStreamReader(inStream));
+        db.execSQL("CREATE TABLE IF NOT EXISTS TutorialsPoint(Username VARCHAR,Password VARCHAR);");
 
-        BufferedReader buffer = new BufferedReader(new InputStreamReader(inStream));
+        db.execSQL("INSERT INTO TutorialsPoint VALUES('admin','admin');");
+
+        //FileReader file = new FileReader("data.csv");
+
+        AssetManager am = getBaseContext().getAssets();
+        InputStream is = am.open("ffinput.csv"); //src/main/assets
+        BufferedReader buffer = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+
         String line = "";
+        String tableName = "TABLE_NAME";
+        String columns = "_id, name, dt1, dt2, dt3";
+        String str1 = "INSERT INTO " + tableName + " (" + columns + ") values(";
+        String str2 = ");";
+
         db.beginTransaction();
-        try {
-            while ((line = buffer.readLine()) != null) {
-                String[] colums = line.split(",");
-                if (colums.length != 4) {
-                    Log.d("CSVParser", "Skipping Bad CSV Row");
-                    continue;
-                }
-                ContentValues cv = new ContentValues(3);
-                cv.put(dbCol0, colums[0].trim());
-                cv.put(dbCol1, colums[1].trim());
-                cv.put(dbCol2, colums[2].trim());
-                cv.put(dbCol3, colums[3].trim());
-                cv.put(dbCol4, colums[4].trim());
-                db.insert(TABLE, null, cv);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        while ((line = buffer.readLine()) != null) {
+            StringBuilder sb = new StringBuilder(str1);
+            String[] str = line.split(",");
+            sb.append("'" + str[0] + "',");
+            sb.append(str[1] + "',");
+            sb.append(str[2] + "',");
+            sb.append(str[3] + "'");
+            sb.append(str[4] + "'");
+            sb.append(str2);
+            db.execSQL(sb.toString());
         }
         db.setTransactionSuccessful();
         db.endTransaction();
     }
-
-
 }
-
-public class DBHelper extends SQLiteOpenHelper {
-
-    private static final int DATABASE_VERSION = 1;
-    private static final String DICTIONARY_TABLE_NAME = "dictionary";
-    private static final String DICTIONARY_TABLE_CREATE =
-            "CREATE TABLE " + DICTIONARY_TABLE_NAME + " (" +
-                    KEY_WORD + " TEXT, " +
-                    KEY_DEFINITION + " TEXT);";
-
-    DictionaryOpenHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
-    }
-
-    @Override
-    public void onCreate(SQLiteDatabase db) {
-        db.execSQL(DICTIONARY_TABLE_CREATE);
-    }
-
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {}
-
-}
-
 
 class RetrieveFeedTask extends AsyncTask<Void, Void, String> {
 
