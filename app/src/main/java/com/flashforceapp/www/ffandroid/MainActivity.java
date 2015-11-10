@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
     }
 }
 
-class RetrieveFeedTask extends AsyncTask<Void, Void, String> {
+class GetOffset extends AsyncTask<Void, Void, String> {
 
     private Exception exception;
 
