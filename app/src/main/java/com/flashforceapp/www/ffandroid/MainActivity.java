@@ -22,10 +22,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
     public double avgOffset = 0.0;
+    public List<Double> offsets = new ArrayList<Double>();
+
     public boolean ffdbLoaded = false;
 
     @Override
@@ -40,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
         //NSNotificationCenter.defaultCenter().addObserver(self, selector:"checkOffsetAge", name:UIApplicationDidBecomeActiveNotification, object: nil) // adding observer for syncing
 
-        //databaseCheck() // check database and load data if needed
+        //checkDatabase() // check database and load data if needed
 
         //checkOffsetAge() //change appearance of flash force icon based on offset age, and run performSync if needed
 
@@ -54,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
         }
          */
         //new RetrieveFeedTask().execute();
+        //TODO: do offset 5 times
+        new GetOffset().execute();
+        //TODO: average the offsets into avgOffset at completion of GetOffsets.. or do this at flashtime
     }
 
     @Override
@@ -78,7 +85,9 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /** Called when the user clicks the Flash button */
+    /**
+     * Called when the user clicks the Flash button
+     */
     public void flash_handler(View view) {
         Log.i("INFO", "flash_handler called");
         // Do something in response to button
@@ -94,20 +103,18 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void checkDatabase(){
+    public void checkDatabase() {
         if (ffdbLoaded == false) {
             try {
                 loadDatabase();
-            }
-            catch(IOException e){
+            } catch (IOException e) {
                 //report on this
             }
-        }
-        else {
+        } else {
         }
     }
 
-    public void loadDatabase() throws IOException{
+    public void loadDatabase() throws IOException {
         SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
 
         db.execSQL("CREATE TABLE IF NOT EXISTS TutorialsPoint(Username VARCHAR,Password VARCHAR);");
@@ -141,60 +148,52 @@ public class MainActivity extends AppCompatActivity {
         db.setTransactionSuccessful();
         db.endTransaction();
     }
-}
 
-class GetOffset extends AsyncTask<Void, Void, String> {
 
-    private Exception exception;
+    class GetOffset extends AsyncTask<Void, Void, String> {
 
-    protected void onPreExecute() {
-        //progressBar.setVisibility(View.VISIBLE);
-        //responseView.setText("");
-    }
+        private Exception exception;
 
-    protected String doInBackground(Void... urls) {
-        //String email = emailText.getText().toString();
-        // Do some validation here
-
-        try {
-            URL url = new URL("https://alignthebeat.appspot.com");
-            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        protected String doInBackground(Void... urls) {
             try {
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-                StringBuilder stringBuilder = new StringBuilder();
-                String line;
-                while ((line = bufferedReader.readLine()) != null) {
-                    stringBuilder.append(line).append("\n");
+                //TODO: include a check for timing and discard the bad results
+                URL url = new URL("https://alignthebeat.appspot.com");
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                try {
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                    StringBuilder stringBuilder = new StringBuilder();
+                    String line;
+                    while ((line = bufferedReader.readLine()) != null) {
+                        stringBuilder.append(line).append("\n");
+                    }
+                    bufferedReader.close();
+                    return stringBuilder.toString();
+                } finally {
+                    urlConnection.disconnect();
                 }
-                bufferedReader.close();
-                return stringBuilder.toString();
-            }
-            finally{
-                urlConnection.disconnect();
+            } catch (Exception e) {
+                Log.e("ERROR", e.getMessage(), e);
+                return null;
             }
         }
-        catch(Exception e) {
-            Log.e("ERROR", e.getMessage(), e);
-            return null;
-        }
-    }
 
-    protected void onPostExecute(String response) {
-        if(response == null) {
-            response = "THERE WAS AN ERROR";
-        }
-        //progressBar.setVisibility(View.GONE);
-        Log.i("INFO", response);
-        //responseView.setText(response);
+        protected void onPostExecute(String response) {
+            if (response == null) {
+                response = "THERE WAS AN ERROR";
+            }
+            //progressBar.setVisibility(View.GONE);
+            Log.i("INFO", response);
+            //responseView.setText(response);
 
-        try {
-            JSONObject object = (JSONObject) new JSONTokener(response).nextValue();
-            String requestID = object.getString("requestId");
-            int likelihood = object.getInt("likelihood");
-            JSONArray photos = object.getJSONArray("photos");
+            try {
+                JSONObject object = (JSONObject) new JSONTokener(response).nextValue();
+                String date = object.getString("date");
+                double epoch = object.getInt("epoch");
+                offsets.add(epoch);
 
-        } catch (JSONException e) {
-            // Appropriate error handling code
+            } catch (JSONException e) {
+                // Appropriate error handling code
+            }
         }
     }
 }
