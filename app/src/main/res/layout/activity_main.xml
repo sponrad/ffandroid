@@ -8,7 +8,7 @@
 
     <ImageButton
         android:id="@+id/ff_icon"
-        android:layout_above="@id/browse_button"
+        android:layout_above="@+id/browse_button"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:src="@drawable/flashforwardthreeboxes"
@@ -18,7 +18,7 @@
 
     <Button
         android:id="@+id/browse_button"
-        android:layout_above="@id/team_button"
+        android:layout_above="@+id/team_button"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="#FFFFFF"
@@ -31,7 +31,7 @@
 
     <Button
         android:id="@+id/team_button"
-        android:layout_above="@id/outfit_button"
+        android:layout_above="@+id/outfit_button"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="#FFFFFF"
@@ -44,7 +44,7 @@
 
     <Button
         android:id="@+id/outfit_button"
-        android:layout_above="@id/flash_button"
+        android:layout_above="@+id/flash_button"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="#FFFFFF"
