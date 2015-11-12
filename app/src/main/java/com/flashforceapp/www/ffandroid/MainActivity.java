@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,6 +37,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ImageButton image = (ImageButton) findViewById(R.id.ff_icon);
+        image.setOnLongClickListener(new View.OnLongClickListener() {
+            public boolean onLongClick(View v) {
+                performSync();
+                return true;
+            }
+        });
 
         //
         //initialStates()
