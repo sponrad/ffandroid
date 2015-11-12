@@ -100,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void performSync() {
 
-
     }
 
     public void checkDatabase() {

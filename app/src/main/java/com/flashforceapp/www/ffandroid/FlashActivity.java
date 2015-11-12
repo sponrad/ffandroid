@@ -3,6 +3,7 @@ package com.flashforceapp.www.ffandroid;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,7 +17,7 @@ public class FlashActivity extends AppCompatActivity {
 
     private double interval = 0.25;
     private int color = 0;
-    private String[] givenColors = {"D4001F", "FFFFFF", "000000"};   //default bulls colors for testing
+    private String[] givenColors = {"#D4001F", "#FFFFFF", "#000000"};   //default bulls colors for testing
     private ArrayList<String> colors = new ArrayList<String>();
     private double[] brightnessArray = new double[0];
     private Timer timer = new Timer();
@@ -25,6 +26,7 @@ public class FlashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i("INFO", "started FlashActivity");
         setContentView(R.layout.activity_flash);
 
         // Now get a handle to any View contained
@@ -36,7 +38,7 @@ public class FlashActivity extends AppCompatActivity {
 
         // Set the color
         //root.getBackground().setColorFilter(Color.parseColor("#424242"));
-        root.setBackgroundColor(Color.parseColor(colors.get(color)));
+        root.setBackgroundColor(Color.parseColor(givenColors[color]));
 
         String[] splitTiming = givenTiming.split("_");    //contains number of beats for each color
 
@@ -53,9 +55,17 @@ public class FlashActivity extends AppCompatActivity {
                 if (color == colors.size()){
                     color = 0;
                 }
-                View someView = findViewById(R.id.flash_handler);
-                View root = someView.getRootView();
-                root.setBackgroundColor(Color.parseColor(colors.get(color)));
+
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        View someView = findViewById(R.id.flash_handler);
+                        View root = someView.getRootView();
+                        root.setBackgroundColor(Color.parseColor(colors.get(color)));
+                    }
+                });
+
             }
         };
 
