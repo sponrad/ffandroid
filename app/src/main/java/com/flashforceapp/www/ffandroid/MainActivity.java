@@ -2,7 +2,11 @@ package com.flashforceapp.www.ffandroid;
 
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.StateListDrawable;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -41,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         ImageButton image = (ImageButton) findViewById(R.id.ff_icon);
         image.setOnLongClickListener(new View.OnLongClickListener() {
             public boolean onLongClick(View v) {
+                Log.i("INFO","tap button tapped");
                 performSync();
                 return true;
             }
@@ -68,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
          */
         //new RetrieveFeedTask().execute();
         //TODO: do offset 5 times
+        Log.i("INFO", "Starting test of offset");
         new GetOffset().execute();
         //TODO: average the offsets into avgOffset at completion of GetOffsets.. or do this at flashtime
     }
@@ -108,8 +114,32 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void performSync() {
-        ImageButton image = (ImageButton) findViewById(R.id.ff_icon);
-        image.setBackground();
+
+        //
+        ImageButton imagebutton = (ImageButton) findViewById(R.id.ff_icon);
+
+        //for now set the background to black
+        Resources res = getResources();
+        Drawable backgroundimage = res.getDrawable(R.drawable.flashforwardthreeboxesgray,null);
+        imagebutton.setBackground(backgroundimage);
+
+        /* animate the icon
+        StateListDrawable background = (StateListDrawable) imagebutton.getBackground();
+        Drawable current = background.getCurrent();
+        if (current instanceof AnimationDrawable) {
+            AnimationDrawable btnAnimation = (AnimationDrawable) current;
+            btnAnimation.start();
+        }
+        */
+
+        //new GetOffset().execute();
+
+        //revert to static image
+        /*
+        backgroundimage = res.getDrawable(R.drawable.flashforwardthreeboxes);
+        imagebutton.setBackground(backgroundimage);
+        imagebutton.setBackground(backgroundimage);
+        */
     }
 
     public void checkDatabase() {
