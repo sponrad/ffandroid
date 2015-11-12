@@ -108,7 +108,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void performSync() {
-
+        ImageButton image = (ImageButton) findViewById(R.id.ff_icon);
+        image.setBackground();
     }
 
     public void checkDatabase() {

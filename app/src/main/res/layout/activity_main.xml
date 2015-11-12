@@ -11,7 +11,7 @@
         android:layout_above="@+id/browse_button"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:src="@drawable/flashforwardthreeboxes"
+        android:src="@drawable/flashforwardthreeboxesgray"
         android:scaleType="fitCenter"
         android:background="#FFFFFF"
     />
