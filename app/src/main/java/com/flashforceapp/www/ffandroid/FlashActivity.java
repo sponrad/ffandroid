@@ -23,57 +23,15 @@ public class FlashActivity extends AppCompatActivity {
     private Timer timer = new Timer();
     private String givenTiming = "6_4_2";
 
+    double current_time = System.currentTimeMillis() / 1000.0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i("INFO", "started FlashActivity");
         setContentView(R.layout.activity_flash);
 
-        // Now get a handle to any View contained
-        // within the main layout you are using
-        View someView = findViewById(R.id.flash_handler);
-
-        // Find the root view
-        View root = someView.getRootView();
-
-        // Set the color
-        //root.getBackground().setColorFilter(Color.parseColor("#424242"));
-        root.setBackgroundColor(Color.parseColor(givenColors[color]));
-
-        String[] splitTiming = givenTiming.split("_");    //contains number of beats for each color
-
-        for (int i = 0; i < givenColors.length; i++) {
-            for (int j=0; j < Integer.parseInt(splitTiming[i]); j++){
-                colors.add(givenColors[i]);
-            }
-        }
-
-        class updateTask extends TimerTask {
-            public void run(){
-            //change the background color based on the array contents and value of color iterator
-                color += 1;
-                if (color == colors.size()){
-                    color = 0;
-                }
-
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        View someView = findViewById(R.id.flash_handler);
-                        View root = someView.getRootView();
-                        root.setBackgroundColor(Color.parseColor(colors.get(color)));
-                    }
-                });
-
-            }
-        };
-
-        //timer.schedule(task, delay, period)
-        //timer.schedule( new performClass(), 1000, 30000 );
-        // or you can write in another way
-        //timer.scheduleAtFixedRate(task, delay, period);
-        timer.scheduleAtFixedRate(new updateTask(), 0, 250 );
+        mainFlash();
 
     }
 
@@ -98,5 +56,70 @@ public class FlashActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public void mainFlash(){
+        // Now get a handle to any View contained
+        // within the main layout you are using
+        View someView = findViewById(R.id.flash_handler);
+
+        // Find the root view
+        View root = someView.getRootView();
+
+        String[] splitTiming = givenTiming.split("_");    //contains number of beats for each color
+
+        for (int i = 0; i < givenColors.length; i++) {
+            for (int j=0; j < Integer.parseInt(splitTiming[i]); j++){
+                colors.add(givenColors[i]);
+            }
+        }
+
+        double modOffset;
+        long modDelay;
+        double modNumber = colors.size() * interval;
+
+        modOffset = (System.currentTimeMillis() / 1000.0) % modNumber;
+
+        // Set the color
+        color = (int) (modOffset / interval);
+        Log.i("INFO", "COLOR INT: ".concat( Integer.toString(color)));
+        //root.getBackground().setColorFilter(Color.parseColor("#424242"));
+        root.setBackgroundColor(Color.parseColor(colors.get(color)));
+
+        modDelay = (long) (interval - ((System.currentTimeMillis() / 1000.0) % interval) );
+
+        //timer.schedule(task, delay, period)
+        //timer.schedule( new performClass(), 1000, 30000 );
+        // or you can write in another way
+        //timer.scheduleAtFixedRate(task, delay, period);
+        timer.schedule(new delayTask(), modDelay);
+        //timer.scheduleAtFixedRate(new updateTask(), 0, 250 );
+    }
+
+    class delayTask extends TimerTask {
+        public void run(){
+            timer.scheduleAtFixedRate( new updateTask(), 0, 250 );
+        }
+    }
+
+    class updateTask extends TimerTask {
+        public void run(){
+            //change the background color based on the array contents and value of color iterator
+            color += 1;
+            if (color == colors.size()){
+                color = 0;
+            }
+
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    View someView = findViewById(R.id.flash_handler);
+                    View root = someView.getRootView();
+                    root.setBackgroundColor(Color.parseColor(colors.get(color)));
+                }
+            });
+
+        }
+    };
 
 }
