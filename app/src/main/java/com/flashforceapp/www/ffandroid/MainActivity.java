@@ -28,7 +28,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -176,6 +178,13 @@ public class MainActivity extends AppCompatActivity {
 
     class GetOffset extends AsyncTask<Void, Void, String> {
 
+        private double offset;
+        private double ping;
+        private double count = 0.0;
+        private double first_current_time;
+        private double second_current_time;
+
+
         private Exception exception;
 
         protected String doInBackground(Void... urls) {
@@ -183,6 +192,7 @@ public class MainActivity extends AppCompatActivity {
                 //TODO: include a check for timing and discard the bad results
                 URL url = new URL("https://alignthebeat.appspot.com");
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                first_current_time = System.currentTimeMillis() / 1000.0;
                 try {
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
                     StringBuilder stringBuilder = new StringBuilder();
@@ -194,6 +204,7 @@ public class MainActivity extends AppCompatActivity {
                     return stringBuilder.toString();
                 } finally {
                     urlConnection.disconnect();
+                    second_current_time = System.currentTimeMillis() / 1000.0;
                 }
             } catch (Exception e) {
                 Log.e("ERROR", e.getMessage(), e);
@@ -212,9 +223,20 @@ public class MainActivity extends AppCompatActivity {
             try {
                 JSONObject object = (JSONObject) new JSONTokener(response).nextValue();
                 String date = object.getString("date");
-                double epoch = object.getInt("epoch");
-                //offsets.add(epoch);
+                double epoch = object.getDouble("epoch");
+
                 Log.i("INFO", "GOT AN EPOCH: ".concat( Double.toString(epoch) ) );
+                Log.i("INFO", "FIRST_CURRENT_TIME: ".concat(Double.toString(first_current_time)));
+                Log.i("INFO", "SECOND_CURRENT_TIME: ".concat(Double.toString(second_current_time)));
+
+                double ping = second_current_time - first_current_time;
+
+                Log.i("INFO", "GOT A PING: ".concat( Double.toString(ping)));
+
+                double offset = epoch - second_current_time;
+
+                Log.i("INFO", "GOT AN OFFSET: ".concat( Double.toString(ping)));
+                //offsets.add(offset);
 
             } catch (JSONException e) {
                 // Appropriate error handling code
