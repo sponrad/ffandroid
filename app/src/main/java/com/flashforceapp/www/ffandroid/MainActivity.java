@@ -71,11 +71,7 @@ public class MainActivity extends AppCompatActivity {
             firstTimeBoot()  //get owned IAPs and show tutorial images
         }
          */
-        //new RetrieveFeedTask().execute();
-        //TODO: do offset 5 times
-        Log.i("INFO", "Starting test of offset");
-        new GetOffset().execute();
-        //TODO: average the offsets into avgOffset at completion of GetOffsets.. or do this at flashtime
+
     }
 
     @Override
@@ -114,32 +110,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void performSync() {
+        Log.i("INFO", "Started Perform Sync");
 
-        //
         ImageButton imagebutton = (ImageButton) findViewById(R.id.ff_icon);
+        imagebutton.setBackgroundResource(R.drawable.flashforwardthreeboxesgray);
 
-        //for now set the background to black
-        Resources res = getResources();
-        Drawable backgroundimage = res.getDrawable(R.drawable.flashforwardthreeboxesgray,null);
-        imagebutton.setBackground(backgroundimage);
+        //TODO: animate the icon
 
-        /* animate the icon
-        StateListDrawable background = (StateListDrawable) imagebutton.getBackground();
-        Drawable current = background.getCurrent();
-        if (current instanceof AnimationDrawable) {
-            AnimationDrawable btnAnimation = (AnimationDrawable) current;
-            btnAnimation.start();
-        }
-        */
-
-        //new GetOffset().execute();
+        //TODO: do offset 5 times
+        Log.i("INFO", "Starting test of offset");
+        new GetOffset().execute();
+        //TODO: average the offsets into avgOffset at completion of GetOffsets.. or do this at flashtime
 
         //revert to static image
-        /*
-        backgroundimage = res.getDrawable(R.drawable.flashforwardthreeboxes);
-        imagebutton.setBackground(backgroundimage);
-        imagebutton.setBackground(backgroundimage);
-        */
+        //imagebutton.setBackgroundResource(R.drawable.flashforwardthreeboxes);
+
     }
 
     public void checkDatabase() {
@@ -228,7 +213,8 @@ public class MainActivity extends AppCompatActivity {
                 JSONObject object = (JSONObject) new JSONTokener(response).nextValue();
                 String date = object.getString("date");
                 double epoch = object.getInt("epoch");
-                offsets.add(epoch);
+                //offsets.add(epoch);
+                Log.i("INFO", "GOT AN EPOCH: ".concat( Double.toString(epoch) ) );
 
             } catch (JSONException e) {
                 // Appropriate error handling code
