@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
         //NSNotificationCenter.defaultCenter().addObserver(self, selector:"checkOffsetAge", name:UIApplicationDidBecomeActiveNotification, object: nil) // adding observer for syncing
 
-        //checkDatabase() // check database and load data if needed
+        checkDatabase(); // check database and load data if needed
 
         //checkOffsetAge() //change appearance of flash force icon based on offset age, and run performSync if needed
 
@@ -143,36 +143,45 @@ public class MainActivity extends AppCompatActivity {
     public void loadDatabase() throws IOException {
         SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
 
-        db.execSQL("CREATE TABLE IF NOT EXISTS TutorialsPoint(Username VARCHAR,Password VARCHAR);");
+        db.execSQL("drop table if exists patterns");
 
-        db.execSQL("INSERT INTO TutorialsPoint VALUES('admin','admin');");
+        db.execSQL("create table if not exists patterns(id integer primary key autoincrement, storecode text, name text, groupid text, category text, timing text, price real, pattern1 text, pattern2 text, pattern3 text, pattern4 text, pattern5 text, alt1 text)");
 
-        //FileReader file = new FileReader("data.csv");
+        db.execSQL("create table if not exists offsets(id integer primary key autoincrement, offset real, timestamp real)");
+
+        db.execSQL("create table if not exists ownedpatterns(id integer primary key autoincrement, storecode text, name text, patternid integer)");
 
         AssetManager am = getBaseContext().getAssets();
         InputStream is = am.open("ffinput.csv"); //src/main/assets
         BufferedReader buffer = new BufferedReader(new InputStreamReader(is, "UTF-8"));
 
         String line = "";
-        String tableName = "TABLE_NAME";
-        String columns = "_id, name, dt1, dt2, dt3";
-        String str1 = "INSERT INTO " + tableName + " (" + columns + ") values(";
+        String str1 = "insert into patterns values(NULL,";
         String str2 = ");";
 
         db.beginTransaction();
         while ((line = buffer.readLine()) != null) {
             StringBuilder sb = new StringBuilder(str1);
             String[] str = line.split(",");
-            sb.append("'" + str[0] + "',");
-            sb.append(str[1] + "',");
-            sb.append(str[2] + "',");
-            sb.append(str[3] + "'");
-            sb.append(str[4] + "'");
+            sb.append("'" + str[0] + "',");  //storecode
+            sb.append("'" + str[3] + "',");  //name
+            sb.append("'" + str[2] + "',");  //groupid
+            sb.append("'" + str[1] + "',");  //category
+            sb.append("'" + str[19] + "',");  //timing
+            sb.append("'" + str[5] + "',");  //price
+            sb.append("'" + str[6] + "',");  //pattern1
+            sb.append("'" + str[7] + "',");  //pattern2
+            sb.append("'" + str[8] + "',");  //pattern3
+            sb.append("'" + str[9] + "',");  //pattern4
+            sb.append("'" + str[10] + "',");  //pattern5
+            sb.append("'" + str[4] + "'");  //alternate text
             sb.append(str2);
             db.execSQL(sb.toString());
         }
         db.setTransactionSuccessful();
         db.endTransaction();
+
+        ffdbLoaded = true;
     }
 
 
