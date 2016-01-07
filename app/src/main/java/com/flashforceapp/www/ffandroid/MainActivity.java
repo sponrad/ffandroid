@@ -181,6 +181,9 @@ public class MainActivity extends AppCompatActivity {
         db.setTransactionSuccessful();
         db.endTransaction();
 
+        //insert one offset
+        db.execSQL("insert into offsets values (NULL, '0.0','0.0')");
+
         ffdbLoaded = true;
     }
 
@@ -190,8 +193,8 @@ public class MainActivity extends AppCompatActivity {
         private double offset;
         private double ping;
         private double count = 0.0;
-        private double first_current_time;
-        private double second_current_time;
+        private double ct;
+        private double nct;
 
 
         private Exception exception;
@@ -200,8 +203,8 @@ public class MainActivity extends AppCompatActivity {
             try {
                 //TODO: include a check for timing and discard the bad results
                 URL url = new URL("https://alignthebeat.appspot.com");
+                ct = System.currentTimeMillis() / 1000.0;
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                first_current_time = System.currentTimeMillis() / 1000.0;
                 try {
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
                     StringBuilder stringBuilder = new StringBuilder();
@@ -213,7 +216,6 @@ public class MainActivity extends AppCompatActivity {
                     return stringBuilder.toString();
                 } finally {
                     urlConnection.disconnect();
-                    second_current_time = System.currentTimeMillis() / 1000.0;
                 }
             } catch (Exception e) {
                 Log.e("ERROR", e.getMessage(), e);
@@ -230,21 +232,23 @@ public class MainActivity extends AppCompatActivity {
             //responseView.setText(response);
 
             try {
+                nct = System.currentTimeMillis() / 1000.0;
+
                 JSONObject object = (JSONObject) new JSONTokener(response).nextValue();
                 String date = object.getString("date");
                 double epoch = object.getDouble("epoch");
 
                 Log.i("INFO", "GOT AN EPOCH: ".concat( Double.toString(epoch) ) );
-                Log.i("INFO", "FIRST_CURRENT_TIME: ".concat(Double.toString(first_current_time)));
-                Log.i("INFO", "SECOND_CURRENT_TIME: ".concat(Double.toString(second_current_time)));
+                Log.i("INFO", "ct: ".concat(Double.toString(ct)));
+                Log.i("INFO", "nct: ".concat(Double.toString(nct)));
 
-                double ping = second_current_time - first_current_time;
+                double ping = nct - ct;
 
                 Log.i("INFO", "GOT A PING: ".concat( Double.toString(ping)));
 
-                double offset = epoch - second_current_time;
+                double offset = epoch - nct + ping;
 
-                Log.i("INFO", "GOT AN OFFSET: ".concat( Double.toString(ping)));
+                Log.i("INFO", "GOT AN OFFSET: ".concat( Double.toString(offset)));
                 //offsets.add(offset);
 
             } catch (JSONException e) {
