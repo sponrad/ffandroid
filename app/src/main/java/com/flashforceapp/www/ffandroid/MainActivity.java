@@ -119,10 +119,16 @@ public class MainActivity extends AppCompatActivity {
 
         //TODO: animate the icon
 
-        //TODO: do offset 5 times
+        SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
+
+        db.execSQL("DELETE FROM offsets");
+        db.close();
+
         Log.i("INFO", "Starting test of offset");
         new GetOffset().execute();
-        //TODO: average the offsets into avgOffset at completion of GetOffsets.. or do this at flashtime
+        new GetOffset().execute();
+        new GetOffset().execute();
+        //TODO: average the offsets into avgOffset at completion of GetOffsets. just use most recent in flashactivity
 
         //revert to static image
         //imagebutton.setBackgroundResource(R.drawable.flashforwardthreeboxes);
@@ -182,7 +188,9 @@ public class MainActivity extends AppCompatActivity {
         db.endTransaction();
 
         //insert one offset
-        db.execSQL("insert into offsets values (NULL, '0.0','0.0')");
+        //db.execSQL("insert into offsets values (NULL, '0.0','0.0')");
+
+        db.close();
 
         ffdbLoaded = true;
     }
@@ -250,6 +258,14 @@ public class MainActivity extends AppCompatActivity {
 
                 Log.i("INFO", "GOT AN OFFSET: ".concat( Double.toString(offset)));
                 //offsets.add(offset);
+
+                SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
+
+                //db.execSQL("create table if not exists offsets(id integer primary key autoincrement, offset real, timestamp real)");
+                db.execSQL("insert into offsets values(NULL, '"+ Double.toString(offset) + "', '" + Double.toString(nct) +"')");
+
+                db.close();
+
 
             } catch (JSONException e) {
                 // Appropriate error handling code

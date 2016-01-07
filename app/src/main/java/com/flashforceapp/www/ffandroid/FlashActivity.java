@@ -1,5 +1,7 @@
 package com.flashforceapp.www.ffandroid;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -76,8 +78,20 @@ public class FlashActivity extends AppCompatActivity {
         double modOffset;
         long modDelay;
         double modNumber = colors.size() * interval;
+        double offset = 0.0;
 
-        modOffset = (System.currentTimeMillis() / 1000.0) % modNumber;
+        SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
+
+        Cursor c = db.rawQuery("SELECT * FROM offsets", null);
+        if (c.getCount() > 0){
+            c.moveToLast();
+            offset = c.getDouble(c.getColumnIndex("offset"));
+        }
+        db.close();
+
+        Log.i("INFO", "OFFSET FROM DB: ".concat( Double.toString(offset)));
+
+        modOffset = ((System.currentTimeMillis() / 1000.0)+offset-.4) % modNumber;  //add avgOffset to this before mod
 
         // Set the color
         color = (int) (modOffset / interval);
