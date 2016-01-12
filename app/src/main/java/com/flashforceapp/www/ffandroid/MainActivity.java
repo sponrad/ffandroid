@@ -111,6 +111,12 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void browse_handler(View view) {
+        Log.i("INFO", "browse_handler called");
+        Intent intent = new Intent(this, BrowseActivity.class);
+        startActivity(intent);
+    }
+
     public void performSync() {
         Log.i("INFO", "Started Perform Sync");
 
@@ -147,6 +153,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void loadDatabase() throws IOException {
+        Log.i("INFO", "LOADING DATABASE");
         SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
 
         db.execSQL("drop table if exists patterns");
