@@ -3,6 +3,7 @@ package com.flashforceapp.www.ffandroid;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
@@ -36,13 +37,26 @@ import java.util.TimeZone;
 public class MainActivity extends AppCompatActivity {
     public double avgOffset = 0.0;
     public List<Double> offsets = new ArrayList<Double>();
-
+    public String patternid = "";
+    public String team = "";
     public boolean ffdbLoaded = false;
+    /*
+    var actionButtonStatus = "None"
+    var selectedStoreId: String = ""
+    var selectedPrice: String = ""
+     */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            patternid = extras.getString("PATTERNID");
+            team = extras.getString("TEAM");
+        }
 
         ImageButton image = (ImageButton) findViewById(R.id.ff_icon);
         image.setOnLongClickListener(new View.OnLongClickListener() {
@@ -54,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //
-        //initialStates()
+        //initialStates();
         //Button button = (Button)findViewById(R.id.flash_button);
         //button.setText("Click Me !");
 
@@ -63,14 +77,15 @@ public class MainActivity extends AppCompatActivity {
         checkDatabase(); // check database and load data if needed
 
         //checkOffsetAge() //change appearance of flash force icon based on offset age, and run performSync if needed
+        performSync();
 
-        //updateDisplay()  //update screen based on pattern and ownership
+        updateDisplay();  //update screen based on pattern and ownership
 
-        //setAverageOffset() //set the offset used while flashing
+        //setAverageOffset(); //set the offset used while flashing
 
         /*
         if (isAppAlreadyLaunchedOnce() == false){
-            firstTimeBoot()  //get owned IAPs and show tutorial images
+            firstTimeBoot();  //get owned IAPs and show tutorial images
         }
          */
 
@@ -108,6 +123,8 @@ public class MainActivity extends AppCompatActivity {
         //EditText editText = (EditText) findViewById(R.id.edit_message);
         //String message = editText.getText().toString();
         //intent.putExtra(EXTRA_MESSAGE, message);
+        intent.putExtra("PATTERNID", patternid);
+
         startActivity(intent);
     }
 
@@ -278,5 +295,68 @@ public class MainActivity extends AppCompatActivity {
                 // Appropriate error handling code
             }
         }
+    }
+
+    public void updateDisplay(){
+        if (patternid == ""){
+            //no pattern selected
+        }
+        else {
+            loadPatternInformation();
+        }
+    }
+
+    public void loadPatternInformation(){
+        /*
+        self.teamButton.hidden = false
+        self.teamButton.enabled = true
+
+        //teambutton underline
+        self.grayUnderTeam.hidden = false
+
+        //draw the rect over the flash button
+        grayOverFlash.hidden = false
+        self.labelMiddleArrow.hidden = false
+         */
+
+        SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
+
+        Cursor c = db.rawQuery("SELECT COUNT(name) FROM patterns WHERE name='" + team + "'", null);
+        if (c.getCount() > 1){
+            c.moveToLast();
+            //self.outfitButton.enabled = true
+            //self.outfitButton.hidden = false
+            //self.outfitButton.setTitle("Choose Alternate", forState: UIControlState.Normal)
+            //self.labelBottomArrow.hidden = false
+        }
+        else {
+            //self.outfitButton.enabled = false
+            //self.outfitButton.hidden = true
+        }
+
+        c = db.rawQuery("SELECT * FROM patterns WHERE id='" + patternid + "'", null);
+        c.moveToLast();
+        //findViewById(R.id.browse_button);
+        //findViewById(R.id.team_button);
+        //findViewById(R.id.outfit_button);
+        String[] timing = c.getString(c.getColumnIndex("timing")).split("_");
+
+        /*
+        self.browseButton.setTitle(rs.stringForColumn("category"), forState: UIControlState.Normal)
+                self.teamButton.setTitle(rs.stringForColumn("name"), forState: UIControlState.Normal)
+                self.team = rs.stringForColumn("name")
+                self.outfitButton.setTitle(rs.stringForColumn("alt1"), forState: UIControlState.Normal)
+                if rs.stringForColumn("alt1").isEmpty {
+                    self.outfitButton.setTitle("Home", forState: UIControlState.Normal)
+                }
+                var timing = rs.stringForColumn("timing").componentsSeparatedByString("_")
+
+                selectedStoreId = rs.stringForColumn("storecode")
+                selectedPrice = rs.stringForColumn("price")
+         */
+
+        //draw color boxes
+
+        db.close();
     }
 }

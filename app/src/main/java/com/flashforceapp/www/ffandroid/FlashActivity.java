@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -19,11 +20,13 @@ public class FlashActivity extends AppCompatActivity {
 
     private double interval = 0.25;
     private int color = 0;
-    private String[] givenColors = {"#D4001F", "#FFFFFF", "#000000"};   //default bulls colors for testing
     private ArrayList<String> colors = new ArrayList<String>();
     private double[] brightnessArray = new double[0];
     private Timer timer = new Timer();
+    private String patternid = "";
     private String givenTiming = "6_4_2";
+    private List<String> givenColors = new ArrayList<String>();
+
 
     double current_time = System.currentTimeMillis() / 1000.0;
 
@@ -32,6 +35,15 @@ public class FlashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Log.i("INFO", "started FlashActivity");
         setContentView(R.layout.activity_flash);
+
+        givenColors.add("#D4001F");   //default bulls colors
+        givenColors.add("#FFFFFF");
+        givenColors.add("#000000");
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            patternid = extras.getString("PATTERNID");
+        }
 
         mainFlash();
 
@@ -67,11 +79,41 @@ public class FlashActivity extends AppCompatActivity {
         // Find the root view
         View root = someView.getRootView();
 
+        if (patternid != ""){
+            //assign givenTiming and givenColors
+            SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
+
+            Cursor c = db.rawQuery("SELECT * FROM patterns WHERE id='" + patternid + "'", null);
+            if (c.getCount() > 0){
+                c.moveToLast();
+                givenTiming = c.getString(c.getColumnIndex("timing"));
+                //givenColors =
+                givenColors.clear();
+                //check each color field in database
+                if (c.getString(c.getColumnIndex("pattern1")) != ""){
+                    givenColors.add(c.getString(c.getColumnIndex("pattern1")));
+                }
+                if (c.getString(c.getColumnIndex("pattern2")) != ""){
+                    givenColors.add(c.getString(c.getColumnIndex("pattern2")));
+                }
+                if (c.getString(c.getColumnIndex("pattern3")) != ""){
+                    givenColors.add(c.getString(c.getColumnIndex("pattern3")));
+                }
+                if (c.getString(c.getColumnIndex("pattern4")) != ""){
+                    givenColors.add(c.getString(c.getColumnIndex("pattern4")));
+                }
+                if (c.getString(c.getColumnIndex("pattern5")) != ""){
+                    givenColors.add(c.getString(c.getColumnIndex("pattern5")));
+                }
+            }
+
+        }
+
         String[] splitTiming = givenTiming.split("_");    //contains number of beats for each color
 
-        for (int i = 0; i < givenColors.length; i++) {
+        for (int i = 0; i < givenColors.size(); i++) {
             for (int j=0; j < Integer.parseInt(splitTiming[i]); j++){
-                colors.add(givenColors[i]);
+                colors.add(givenColors.get(i));
             }
         }
 

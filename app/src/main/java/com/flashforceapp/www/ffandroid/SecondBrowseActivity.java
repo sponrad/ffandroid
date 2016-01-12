@@ -3,6 +3,7 @@ package com.flashforceapp.www.ffandroid;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.app.LoaderManager;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import java.util.List;
 
 public class SecondBrowseActivity extends AppCompatActivity {
     ListView listView ;
+    List<String> patternids = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,7 @@ public class SecondBrowseActivity extends AppCompatActivity {
             c.moveToFirst();
             while(!c.isAfterLast()) {
                 values.add(c.getString(c.getColumnIndex("name")));
+                patternids.add(c.getString(c.getColumnIndex("id")));
                 c.moveToNext();
             }
         }
@@ -84,10 +87,10 @@ public class SecondBrowseActivity extends AppCompatActivity {
                 // ListView Clicked item value
                 String  itemValue    = (String) listView.getItemAtPosition(position);
 
-                // Show Alert
-                Toast.makeText(getApplicationContext(),
-                        "Position :"+itemPosition+"  ListItem : " +itemValue , Toast.LENGTH_LONG)
-                        .show();
+                Intent intent = new Intent(getApplicationContext(), SecondBrowseActivity.class);
+                intent.putExtra("PATTERNID", patternids.get(itemPosition));
+                intent.putExtra("TEAM", itemValue);
+                startActivity(intent);
 
             }
 
