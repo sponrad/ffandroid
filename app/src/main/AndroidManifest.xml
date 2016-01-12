@@ -37,6 +37,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.flashforceapp.www.ffandroid.MainActivity" />
         </activity>
+        <activity
+            android:name=".SecondBrowseActivity"
+            android:label="@string/title_activity_second_browse"
+            android:parentActivityName=".BrowseActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.flashforceapp.www.ffandroid.BrowseActivity" />
+        </activity>
     </application>
 
 </manifest>
