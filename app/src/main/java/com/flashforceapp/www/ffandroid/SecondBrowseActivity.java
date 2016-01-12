@@ -36,20 +36,23 @@ public class SecondBrowseActivity extends AppCompatActivity {
 
         // Get ListView object from xml
         listView = (ListView) findViewById(R.id.list);
+        String category = "";
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            category = extras.getString("CATEGORY");
+        }
 
         // Defined Array values to show in ListView
         List<String> values = new ArrayList<String>();
 
-        values.add("My Flashes");
-
         SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
 
-        Cursor c = db.rawQuery("SELECT DISTINCT category FROM patterns ORDER BY category", null);
+        Cursor c = db.rawQuery("SELECT name, id FROM patterns WHERE category='" + category + "' AND alt1='Home' UNION  SELECT name, id FROM patterns WHERE category='" + category + "' AND name NOT IN (SELECT name FROM patterns WHERE category='" + category + "' AND alt1='Home') GROUP BY name ORDER BY name", null);
         if (c.getCount() > 0){
             c.moveToFirst();
             while(!c.isAfterLast()) {
-                //Log.i("INFO", c.getString(c.getColumnIndex("category")));
-                values.add(c.getString(c.getColumnIndex("category")));
+                values.add(c.getString(c.getColumnIndex("name")));
                 c.moveToNext();
             }
         }

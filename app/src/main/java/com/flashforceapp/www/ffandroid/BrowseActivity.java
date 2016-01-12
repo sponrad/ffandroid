@@ -3,6 +3,7 @@ package com.flashforceapp.www.ffandroid;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.app.LoaderManager;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -81,10 +82,9 @@ public class BrowseActivity extends AppCompatActivity {
                 // ListView Clicked item value
                 String  itemValue    = (String) listView.getItemAtPosition(position);
 
-                // Show Alert
-                Toast.makeText(getApplicationContext(),
-                        "Position :"+itemPosition+"  ListItem : " +itemValue , Toast.LENGTH_LONG)
-                        .show();
+                Intent intent = new Intent(getApplicationContext(), SecondBrowseActivity.class);
+                intent.putExtra("CATEGORY", itemValue);
+                startActivity(intent);
 
             }
 
