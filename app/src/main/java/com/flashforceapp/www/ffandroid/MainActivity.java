@@ -302,6 +302,11 @@ public class MainActivity extends AppCompatActivity {
     public void updateDisplay(){
         if (patternid == ""){
             //no pattern selected
+            Button team_button = (Button) findViewById(R.id.team_button);
+            Button outfit_button = (Button) findViewById(R.id.outfit_button);
+
+            team_button.setText("");
+            outfit_button.setText("");
         }
         else {
             loadPatternInformation();
