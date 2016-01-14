@@ -82,12 +82,12 @@ public class SecondBrowseActivity extends AppCompatActivity {
                                     int position, long id) {
 
                 // ListView Clicked item index
-                int itemPosition     = position;
+                int itemPosition = position;
 
                 // ListView Clicked item value
-                String  itemValue    = (String) listView.getItemAtPosition(position);
+                String  itemValue = (String) listView.getItemAtPosition(position);
 
-                Intent intent = new Intent(getApplicationContext(), SecondBrowseActivity.class);
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 intent.putExtra("PATTERNID", patternids.get(itemPosition));
                 intent.putExtra("TEAM", itemValue);
                 startActivity(intent);

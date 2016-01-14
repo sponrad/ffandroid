@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 
 import org.json.JSONArray;
@@ -40,10 +41,10 @@ public class MainActivity extends AppCompatActivity {
     public String patternid = "";
     public String team = "";
     public boolean ffdbLoaded = false;
+    public String selectedStoreId = "";
+    public String selectedPrice = "";
     /*
     var actionButtonStatus = "None"
-    var selectedStoreId: String = ""
-    var selectedPrice: String = ""
      */
 
     @Override
@@ -333,29 +334,26 @@ public class MainActivity extends AppCompatActivity {
             //self.outfitButton.enabled = false
             //self.outfitButton.hidden = true
         }
+        c.close();
 
         c = db.rawQuery("SELECT * FROM patterns WHERE id='" + patternid + "'", null);
         c.moveToLast();
-        //findViewById(R.id.browse_button);
-        //findViewById(R.id.team_button);
-        //findViewById(R.id.outfit_button);
+        Button browse_button = (Button) findViewById(R.id.browse_button);
+        Button team_button = (Button) findViewById(R.id.team_button);
+        Button outfit_button = (Button) findViewById(R.id.outfit_button);
+
         String[] timing = c.getString(c.getColumnIndex("timing")).split("_");
 
-        /*
-        self.browseButton.setTitle(rs.stringForColumn("category"), forState: UIControlState.Normal)
-                self.teamButton.setTitle(rs.stringForColumn("name"), forState: UIControlState.Normal)
-                self.team = rs.stringForColumn("name")
-                self.outfitButton.setTitle(rs.stringForColumn("alt1"), forState: UIControlState.Normal)
-                if rs.stringForColumn("alt1").isEmpty {
-                    self.outfitButton.setTitle("Home", forState: UIControlState.Normal)
-                }
-                var timing = rs.stringForColumn("timing").componentsSeparatedByString("_")
+        browse_button.setText(c.getString(c.getColumnIndex("category")));
+        team_button.setText(team);
+        if (c.getString(c.getColumnIndex("alt1")) != ""){
+            outfit_button.setText(c.getString(c.getColumnIndex("alt1")));
+        }
 
-                selectedStoreId = rs.stringForColumn("storecode")
-                selectedPrice = rs.stringForColumn("price")
-         */
+        selectedStoreId = c.getString(c.getColumnIndex("storecode"));
+        selectedPrice = c.getString(c.getColumnIndex("price"));
 
-        //draw color boxes
+        //draw color boxes HERE
 
         db.close();
     }
