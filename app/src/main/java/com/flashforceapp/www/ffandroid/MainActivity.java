@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         checkDatabase(); // check database and load data if needed
 
         //checkOffsetAge() //change appearance of flash force icon based on offset age, and run performSync if needed
-        performSync();
+        performSync();  //TODO change this to checkOffsetAge()
 
         updateDisplay();  //update screen based on pattern and ownership
 
@@ -160,9 +160,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void checkDatabase() {
-        if (ffdbLoaded == false) {
+        if (ffdbLoaded == false && patternid == "") {
             try {
                 loadDatabase();
+                Log.i("INFO","DATABASE LOADED");
             } catch (IOException e) {
                 //report on this
             }
@@ -319,39 +320,32 @@ public class MainActivity extends AppCompatActivity {
         grayOverFlash.hidden = false
         self.labelMiddleArrow.hidden = false
          */
-
-        SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
-
-        Cursor c = db.rawQuery("SELECT COUNT(name) FROM patterns WHERE name='" + team + "'", null);
-        if (c.getCount() > 1){
-            c.moveToLast();
-            //self.outfitButton.enabled = true
-            //self.outfitButton.hidden = false
-            //self.outfitButton.setTitle("Choose Alternate", forState: UIControlState.Normal)
-            //self.labelBottomArrow.hidden = false
-        }
-        else {
-            //self.outfitButton.enabled = false
-            //self.outfitButton.hidden = true
-        }
-        c.close();
-
-        c = db.rawQuery("SELECT * FROM patterns WHERE id='" + patternid + "'", null);
-        c.moveToLast();
         Button browse_button = (Button) findViewById(R.id.browse_button);
         Button team_button = (Button) findViewById(R.id.team_button);
         Button outfit_button = (Button) findViewById(R.id.outfit_button);
+
+        SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
+
+        Cursor c = db.rawQuery("SELECT * FROM patterns WHERE id='" + patternid + "'", null);
+        c.moveToLast();
 
         String[] timing = c.getString(c.getColumnIndex("timing")).split("_");
 
         browse_button.setText(c.getString(c.getColumnIndex("category")));
         team_button.setText(team);
-        if (c.getString(c.getColumnIndex("alt1")) != ""){
-            outfit_button.setText(c.getString(c.getColumnIndex("alt1")));
-        }
+        outfit_button.setText(c.getString(c.getColumnIndex("alt1")));
 
         selectedStoreId = c.getString(c.getColumnIndex("storecode"));
         selectedPrice = c.getString(c.getColumnIndex("price"));
+
+        c.close();
+
+        c = db.rawQuery("SELECT * FROM patterns WHERE name='" + team + "'", null);
+        if (c.getCount() == 1){
+            //no alternates
+            outfit_button.setText("");
+        }
+        c.close();
 
         //draw color boxes HERE
 
