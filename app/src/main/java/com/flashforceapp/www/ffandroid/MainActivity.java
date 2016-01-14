@@ -5,9 +5,15 @@ import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.StateListDrawable;
+import android.graphics.drawable.shapes.RectShape;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,8 +21,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.Gallery;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -314,17 +324,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void loadPatternInformation(){
-        /*
-        self.teamButton.hidden = false
-        self.teamButton.enabled = true
-
-        //teambutton underline
-        self.grayUnderTeam.hidden = false
-
-        //draw the rect over the flash button
-        grayOverFlash.hidden = false
-        self.labelMiddleArrow.hidden = false
-         */
         Button browse_button = (Button) findViewById(R.id.browse_button);
         Button team_button = (Button) findViewById(R.id.team_button);
         Button outfit_button = (Button) findViewById(R.id.outfit_button);
@@ -353,6 +352,23 @@ public class MainActivity extends AppCompatActivity {
         c.close();
 
         //draw color boxes HERE
+        int x = 10;
+        int y = 10;
+        int width = 300;
+        int height = 50;
+
+        View canvas_space = (View) findViewById(R.id.canvas_space);
+
+        Bitmap b = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
+        Canvas canv = new Canvas(b);
+
+        Paint paint = new Paint();
+
+        paint.setColor(Color.YELLOW);
+        paint.setStrokeWidth(3);
+        canv.drawRect(33, 33, 77, 60, paint );
+
+        canvas_space.draw(canv);
 
         db.close();
     }
