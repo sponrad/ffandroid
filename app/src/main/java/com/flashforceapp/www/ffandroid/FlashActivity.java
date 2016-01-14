@@ -90,20 +90,20 @@ public class FlashActivity extends AppCompatActivity {
                 //givenColors =
                 givenColors.clear();
                 //check each color field in database
-                if (c.getString(c.getColumnIndex("pattern1")) != ""){
-                    givenColors.add(c.getString(c.getColumnIndex("pattern1")));
+                if (!c.getString(c.getColumnIndex("pattern1")).isEmpty()){
+                    givenColors.add("#" + c.getString(c.getColumnIndex("pattern1")));
                 }
-                if (c.getString(c.getColumnIndex("pattern2")) != ""){
-                    givenColors.add(c.getString(c.getColumnIndex("pattern2")));
+                if (!c.getString(c.getColumnIndex("pattern2")).isEmpty()){
+                    givenColors.add("#" + c.getString(c.getColumnIndex("pattern2")));
                 }
-                if (c.getString(c.getColumnIndex("pattern3")) != ""){
-                    givenColors.add(c.getString(c.getColumnIndex("pattern3")));
+                if (!c.getString(c.getColumnIndex("pattern3")).isEmpty()){
+                    givenColors.add("#" + c.getString(c.getColumnIndex("pattern3")));
                 }
-                if (c.getString(c.getColumnIndex("pattern4")) != ""){
-                    givenColors.add(c.getString(c.getColumnIndex("pattern4")));
+                if (!c.getString(c.getColumnIndex("pattern4")).isEmpty()){
+                    givenColors.add("#" + c.getString(c.getColumnIndex("pattern4")));
                 }
-                if (c.getString(c.getColumnIndex("pattern5")) != ""){
-                    givenColors.add(c.getString(c.getColumnIndex("pattern5")));
+                if (!c.getString(c.getColumnIndex("pattern5")).isEmpty()){
+                    givenColors.add("#" + c.getString(c.getColumnIndex("pattern5")));
                 }
             }
 
