@@ -9,7 +9,9 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.StateListDrawable;
@@ -350,26 +352,39 @@ public class MainActivity extends AppCompatActivity {
             outfit_button.setText("");
         }
         c.close();
-
-        //draw color boxes HERE
-        int x = 10;
-        int y = 10;
-        int width = 300;
-        int height = 50;
-
-        View canvas_space = (View) findViewById(R.id.canvas_space);
-
-        Bitmap b = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
-        Canvas canv = new Canvas(b);
-
-        Paint paint = new Paint();
-
-        paint.setColor(Color.YELLOW);
-        paint.setStrokeWidth(3);
-        canv.drawRect(33, 33, 77, 60, paint );
-
-        canvas_space.draw(canv);
-
         db.close();
+
+        drawBoxes();
+    }
+
+    public void drawBoxes(){
+        SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
+        Cursor c = db.rawQuery("SELECT * FROM patterns WHERE id='" + patternid + "'", null);
+        c.moveToLast();
+        c.close();
+        db.close();
+
+        ImageView myImageView = (ImageView) findViewById(R.id.canvas_space);
+        Bitmap myBitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
+        Paint myRectPaint = new Paint();
+        int x1 = 0;
+        int y1 = 0;
+        int x2 = 200;
+        int y2 = 50;
+        myRectPaint.setColor(Color.BLUE);
+        myRectPaint.setStrokeWidth(3);
+
+        //Create a new image bitmap and attach a brand new canvas to it
+        Bitmap tempBitmap = Bitmap.createBitmap(myBitmap.getWidth(), myBitmap.getHeight(), Bitmap.Config.RGB_565);
+        Canvas tempCanvas = new Canvas(tempBitmap);
+
+        //Draw the image bitmap into the cavas
+        tempCanvas.drawBitmap(myBitmap, 0, 0, null);
+
+        //Draw everything else you want into the canvas, in this example a rectangle with rounded edges
+        tempCanvas.drawRoundRect(new RectF(x1, y1, x2,y2), 2, 2, myRectPaint);
+
+        //Attach the canvas to the ImageView
+        myImageView.setImageDrawable(new BitmapDrawable(getResources(), tempBitmap));
     }
 }

@@ -58,14 +58,14 @@
         android:paddingLeft="20px"
     />
 
-    <RelativeLayout
+    <ImageView
         android:id="@+id/canvas_space"
         android:layout_above="@+id/flash_button"
         android:layout_width="match_parent"
         android:layout_height="100px"
         android:background="#aeaeae"
         >
-        </RelativeLayout>
+        </ImageView>
 
     <Button
         android:id="@+id/flash_button"
