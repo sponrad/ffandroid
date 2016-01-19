@@ -30,6 +30,7 @@ import java.util.List;
 public class AlternateActivity extends AppCompatActivity {
     ListView listView ;
     List<String> patternids = new ArrayList<String>();
+    String team = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +39,11 @@ public class AlternateActivity extends AppCompatActivity {
 
         // Get ListView object from xml
         listView = (ListView) findViewById(R.id.list);
-        String category = "";
+        String group_id = "";
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            category = extras.getString("CATEGORY");
+            group_id = extras.getString("GROUPID");
         }
 
         // Defined Array values to show in ListView
@@ -50,15 +51,17 @@ public class AlternateActivity extends AppCompatActivity {
 
         SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
 
-        Cursor c = db.rawQuery("SELECT name, id FROM patterns WHERE category='" + category + "' AND alt1='Home' UNION  SELECT name, id FROM patterns WHERE category='" + category + "' AND name NOT IN (SELECT name FROM patterns WHERE category='" + category + "' AND alt1='Home') GROUP BY name ORDER BY name", null);
+        Cursor c = db.rawQuery("SELECT alt1, name, id FROM patterns WHERE groupid='" + group_id + "' ORDER BY alt1", null);
         if (c.getCount() > 0){
             c.moveToFirst();
             while(!c.isAfterLast()) {
-                values.add(c.getString(c.getColumnIndex("name")));
+                values.add(c.getString(c.getColumnIndex("alt1")));
                 patternids.add(c.getString(c.getColumnIndex("id")));
+                team = c.getString(c.getColumnIndex("name"));
                 c.moveToNext();
             }
         }
+        c.close();
         db.close();
 
         // Define a new Adapter
@@ -89,7 +92,7 @@ public class AlternateActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 intent.putExtra("PATTERNID", patternids.get(itemPosition));
-                intent.putExtra("TEAM", itemValue);
+                intent.putExtra("TEAM", team);
                 startActivity(intent);
 
             }

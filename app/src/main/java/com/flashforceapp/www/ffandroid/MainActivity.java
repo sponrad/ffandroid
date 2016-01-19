@@ -146,23 +146,31 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void browse_handler(View view) {
-        Log.i("INFO", "browse_handler called");
         Intent intent = new Intent(this, BrowseActivity.class);
         startActivity(intent);
     }
 
     public void second_browse_handler(View view) {
-        Log.i("INFO", "browse_handler called");
         Intent intent = new Intent(this, SecondBrowseActivity.class);
-        //intent.putExtra("CATEGORY", itemValue);
+        Button browse_button = (Button) findViewById(R.id.browse_button);
+
+        intent.putExtra("CATEGORY", browse_button.getText() );
         startActivity(intent);
     }
 
     public void alternate_handler(View view) {
-        Log.i("INFO", "browse_handler called");
         Intent intent = new Intent(this, AlternateActivity.class);
-        //intent.putExtra("PATTERNID", patternids.get(itemPosition));
-        //intent.putExtra("TEAM", itemValue);
+        SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
+
+        Cursor c = db.rawQuery("SELECT * FROM patterns WHERE id='" + patternid + "'", null);
+        c.moveToLast();
+
+        String group_id = c.getString(c.getColumnIndex("groupid"));
+
+        c.close();
+        db.close();
+
+        intent.putExtra("GROUPID", group_id );
         startActivity(intent);
     }
     public void performSync() {
@@ -337,6 +345,9 @@ public class MainActivity extends AppCompatActivity {
 
             team_button.setText("");
             outfit_button.setText("");
+
+            team_button.setOnClickListener(null);
+            outfit_button.setOnClickListener(null);
 
             clearBoxArea();
         }
