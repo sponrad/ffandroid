@@ -32,6 +32,7 @@ import android.widget.Button;
 import android.widget.Gallery;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -322,6 +323,8 @@ public class MainActivity extends AppCompatActivity {
 
             team_button.setText("");
             outfit_button.setText("");
+
+            clearBoxArea();
         }
         else {
             loadPatternInformation();
@@ -361,14 +364,42 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void drawBoxes(){
+        String givenTiming = "";
+        List<String> givenColors = new ArrayList<String>();
+
         SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
         Cursor c = db.rawQuery("SELECT * FROM patterns WHERE id='" + patternid + "'", null);
         c.moveToLast();
+        givenTiming = c.getString(c.getColumnIndex("timing"));
+        String[] splitTiming = givenTiming.split("_");
+
+        if (!c.getString(c.getColumnIndex("pattern1")).isEmpty()){
+            for (int i = 0; i < Integer.parseInt(splitTiming[0]); i++) {
+                givenColors.add("#" + c.getString(c.getColumnIndex("pattern1")));
+            }
+        }
+        if (!c.getString(c.getColumnIndex("pattern2")).isEmpty()){
+            for (int i = 0; i < Integer.parseInt(splitTiming[1]); i++) {
+                givenColors.add("#" + c.getString(c.getColumnIndex("pattern2")));
+            }
+        }
+        if (!c.getString(c.getColumnIndex("pattern3")).isEmpty()){
+            for (int i = 0; i < Integer.parseInt(splitTiming[2]); i++) {
+                givenColors.add("#" + c.getString(c.getColumnIndex("pattern3")));
+            }
+        }
+        if (!c.getString(c.getColumnIndex("pattern4")).isEmpty()){
+            for (int i = 0; i < Integer.parseInt(splitTiming[3]); i++) {
+                givenColors.add("#" + c.getString(c.getColumnIndex("pattern4")));
+            }
+        }
+        if (!c.getString(c.getColumnIndex("pattern5")).isEmpty()){
+            for (int i = 0; i < Integer.parseInt(splitTiming[4]); i++) {
+                givenColors.add("#" + c.getString(c.getColumnIndex("pattern5")));
+            }
+        }
         c.close();
         db.close();
-
-        //WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        //Display display = wm.getDefaultDisplay();
 
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -378,13 +409,41 @@ public class MainActivity extends AppCompatActivity {
 
         ImageView myImageView = (ImageView) findViewById(R.id.canvas_space);
         Bitmap myBitmap = Bitmap.createBitmap(width, 100, Bitmap.Config.ARGB_8888);
-        Paint myRectPaint = new Paint();
-        int x1 = 0;
-        int y1 = 0;
-        int x2 = 200;
-        int y2 = 50;
-        myRectPaint.setColor(Color.BLUE);
-        myRectPaint.setStrokeWidth(3);
+
+        //Create a new image bitmap and attach a brand new canvas to it
+        Bitmap tempBitmap = Bitmap.createBitmap(myBitmap.getWidth(), myBitmap.getHeight(), Bitmap.Config.RGB_565);
+        Canvas tempCanvas = new Canvas(tempBitmap);
+
+        //Draw the image bitmap into the canvas
+        tempCanvas.drawBitmap(myBitmap, 0, 0, null);
+
+        int boxWidth = width / givenColors.size();
+
+        for (int i = 0; i < givenColors.size(); i++){
+            Paint myRectPaint = new Paint();
+            myRectPaint.setColor(Color.parseColor(givenColors.get(i)));
+            int xCoord = (i * boxWidth);
+            tempCanvas.drawRoundRect(new RectF(xCoord, 0, (xCoord + boxWidth), 100), 2, 2, myRectPaint);
+        }
+
+        //Attach the canvas to the ImageView
+        myImageView.setImageDrawable(new BitmapDrawable(getResources(), tempBitmap));
+    }
+
+    public void clearBoxArea(){
+        SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
+        Cursor c = db.rawQuery("SELECT * FROM patterns WHERE id='" + patternid + "'", null);
+        c.moveToLast();
+        c.close();
+        db.close();
+
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+
+        ImageView myImageView = (ImageView) findViewById(R.id.canvas_space);
+        Bitmap myBitmap = Bitmap.createBitmap(width, 100, Bitmap.Config.ARGB_8888);
 
         //Create a new image bitmap and attach a brand new canvas to it
         Bitmap tempBitmap = Bitmap.createBitmap(myBitmap.getWidth(), myBitmap.getHeight(), Bitmap.Config.RGB_565);
@@ -393,8 +452,12 @@ public class MainActivity extends AppCompatActivity {
         //Draw the image bitmap into the cavas
         tempCanvas.drawBitmap(myBitmap, 0, 0, null);
 
+        Paint myRectPaint = new Paint();
+        myRectPaint.setColor(Color.WHITE);
+        //myRectPaint.setStrokeWidth(3);
+
         //Draw everything else you want into the canvas, in this example a rectangle with rounded edges
-        //tempCanvas.drawRoundRect(new RectF(x1, y1, x2,y2), 2, 2, myRectPaint);
+        tempCanvas.drawRoundRect(new RectF(0, 0, width, 100), 2, 2, myRectPaint);
 
         //Attach the canvas to the ImageView
         myImageView.setImageDrawable(new BitmapDrawable(getResources(), tempBitmap));

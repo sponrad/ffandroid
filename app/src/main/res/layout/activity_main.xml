@@ -60,8 +60,8 @@
         android:layout_above="@+id/flash_button"
         android:layout_width="match_parent"
         android:layout_height="100px"
-        android:background="#ffffff"
-        >
+        android:background="#FFFFFF"
+        android:backgroundTint="#FFFFFF">
         </ImageView>
 
     <Button
