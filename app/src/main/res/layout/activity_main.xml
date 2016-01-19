@@ -27,8 +27,9 @@
         android:textAllCaps="false"
         android:text="Browse"
         android:textSize="@dimen/button_text_size"
-        android:gravity="center"
+        android:gravity="left"
         android:onClick="browse_handler"
+        android:paddingLeft="20px"
         />
 
     <Button
@@ -40,8 +41,10 @@
         android:textAllCaps="false"
         android:text="Select Team"
         android:textSize="@dimen/button_text_size"
-        android:gravity="center"
+        android:gravity="left"
         android:onClick="second_browse_handler"
+        android:paddingLeft="20px"
+
         />
 
     <Button
@@ -53,8 +56,9 @@
         android:text="Select Outfit"
         android:textAllCaps="false"
         android:textSize="@dimen/button_text_size"
-        android:gravity="center"
+        android:gravity="left"
         android:onClick="alternate_handler"
+        android:paddingLeft="20px"
 
         />
 
