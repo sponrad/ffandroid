@@ -28,7 +28,6 @@
         android:text="Browse"
         android:textSize="@dimen/button_text_size"
         android:gravity="center"
-        android:paddingLeft="20px"
         android:onClick="browse_handler"
         />
 
@@ -42,7 +41,6 @@
         android:text="Select Team"
         android:textSize="@dimen/button_text_size"
         android:gravity="center"
-        android:paddingLeft="20px"
         />
 
     <Button
@@ -55,7 +53,6 @@
         android:textAllCaps="false"
         android:textSize="@dimen/button_text_size"
         android:gravity="center"
-        android:paddingLeft="20px"
     />
 
     <ImageView
@@ -63,7 +60,7 @@
         android:layout_above="@+id/flash_button"
         android:layout_width="match_parent"
         android:layout_height="100px"
-        android:background="#aeaeae"
+        android:background="#ffffff"
         >
         </ImageView>
 

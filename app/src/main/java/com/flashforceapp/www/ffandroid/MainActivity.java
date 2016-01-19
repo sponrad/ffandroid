@@ -1,5 +1,6 @@
 package com.flashforceapp.www.ffandroid;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
@@ -9,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.RectF;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
@@ -20,6 +22,7 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -364,8 +367,17 @@ public class MainActivity extends AppCompatActivity {
         c.close();
         db.close();
 
+        //WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        //Display display = wm.getDefaultDisplay();
+
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        int height = size.y;
+
         ImageView myImageView = (ImageView) findViewById(R.id.canvas_space);
-        Bitmap myBitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
+        Bitmap myBitmap = Bitmap.createBitmap(width, 100, Bitmap.Config.ARGB_8888);
         Paint myRectPaint = new Paint();
         int x1 = 0;
         int y1 = 0;
@@ -382,7 +394,7 @@ public class MainActivity extends AppCompatActivity {
         tempCanvas.drawBitmap(myBitmap, 0, 0, null);
 
         //Draw everything else you want into the canvas, in this example a rectangle with rounded edges
-        tempCanvas.drawRoundRect(new RectF(x1, y1, x2,y2), 2, 2, myRectPaint);
+        //tempCanvas.drawRoundRect(new RectF(x1, y1, x2,y2), 2, 2, myRectPaint);
 
         //Attach the canvas to the ImageView
         myImageView.setImageDrawable(new BitmapDrawable(getResources(), tempBitmap));
