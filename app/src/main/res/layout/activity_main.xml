@@ -41,6 +41,7 @@
         android:text="Select Team"
         android:textSize="@dimen/button_text_size"
         android:gravity="center"
+        android:onClick="second_browse_handler"
         />
 
     <Button
@@ -53,7 +54,9 @@
         android:textAllCaps="false"
         android:textSize="@dimen/button_text_size"
         android:gravity="center"
-    />
+        android:onClick="alternate_handler"
+
+        />
 
     <ImageView
         android:id="@+id/canvas_space"

@@ -6,4 +6,5 @@
     <string name="title_activity_flash">Flash</string>
     <string name="title_activity_browse">BrowseActivity</string>
     <string name="title_activity_second_browse">SecondBrowseActivity</string>
+    <string name="title_activity_alternate">AlternateActivity</string>
 </resources>

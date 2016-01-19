@@ -151,6 +151,20 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void second_browse_handler(View view) {
+        Log.i("INFO", "browse_handler called");
+        Intent intent = new Intent(this, SecondBrowseActivity.class);
+        //intent.putExtra("CATEGORY", itemValue);
+        startActivity(intent);
+    }
+
+    public void alternate_handler(View view) {
+        Log.i("INFO", "browse_handler called");
+        Intent intent = new Intent(this, AlternateActivity.class);
+        //intent.putExtra("PATTERNID", patternids.get(itemPosition));
+        //intent.putExtra("TEAM", itemValue);
+        startActivity(intent);
+    }
     public void performSync() {
         Log.i("INFO", "Started Perform Sync");
 
