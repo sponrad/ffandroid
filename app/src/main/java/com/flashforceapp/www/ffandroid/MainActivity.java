@@ -68,12 +68,28 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             patternid = extras.getString("PATTERNID");
             team = extras.getString("TEAM");
         }
+
+        //initialStates();
+
+        checkDatabase(); // check database and load data if needed
+
+        checkOffsetAge(); //change appearance of flash force icon based on offset age, and run performSync if needed
+
+        performSync();  //TODO change this to checkOffsetAge()
+
+        updateDisplay();  //update screen based on pattern and ownership
+
+        //setAverageOffset(); //set the offset used while flashing
+        /*
+        if (isAppAlreadyLaunchedOnce() == false){
+            firstTimeBoot();  //get owned IAPs and show tutorial images
+        }
+         */
 
         ImageButton image = (ImageButton) findViewById(R.id.ff_icon);
         image.setOnLongClickListener(new View.OnLongClickListener() {
@@ -83,28 +99,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-
-        //
-        //initialStates();
-        //Button button = (Button)findViewById(R.id.flash_button);
-        //button.setText("Click Me !");
-
-        //NSNotificationCenter.defaultCenter().addObserver(self, selector:"checkOffsetAge", name:UIApplicationDidBecomeActiveNotification, object: nil) // adding observer for syncing
-
-        checkDatabase(); // check database and load data if needed
-
-        //checkOffsetAge() //change appearance of flash force icon based on offset age, and run performSync if needed
-        performSync();  //TODO change this to checkOffsetAge()
-
-        updateDisplay();  //update screen based on pattern and ownership
-
-        //setAverageOffset(); //set the offset used while flashing
-
-        /*
-        if (isAppAlreadyLaunchedOnce() == false){
-            firstTimeBoot();  //get owned IAPs and show tutorial images
-        }
-         */
 
     }
 
@@ -173,6 +167,7 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("GROUPID", group_id );
         startActivity(intent);
     }
+
     public void performSync() {
         Log.i("INFO", "Started Perform Sync");
 
@@ -335,6 +330,14 @@ public class MainActivity extends AppCompatActivity {
                 // Appropriate error handling code
             }
         }
+    }
+
+    public void checkOffsetAge(){
+        //get last offset
+        //get the system time
+        //if there is an offset, compare to system time
+        //if offset older than 10 minutes, get a new one
+        //if no offset, get one
     }
 
     public void updateDisplay(){
