@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean ffdbLoaded = false;
     public String selectedStoreId = "";
     public String selectedPrice = "";
+    public double offsetAgeforResync = 600.0; // allowable offset age in seconds (600 = 10 min)
     /*
     var actionButtonStatus = "None"
      */
@@ -80,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
         checkOffsetAge(); //change appearance of flash force icon based on offset age, and run performSync if needed
 
-        performSync();  //TODO change this to checkOffsetAge()
+        //performSync();  // handled by checkOffsetAge
 
         updateDisplay();  //update screen based on pattern and ownership
 
@@ -94,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
         ImageButton image = (ImageButton) findViewById(R.id.ff_icon);
         image.setOnLongClickListener(new View.OnLongClickListener() {
             public boolean onLongClick(View v) {
-                Log.i("INFO","tap button tapped");
+                Log.i("INFO", "tap button tapped");
                 performSync();
                 return true;
             }
@@ -333,11 +334,31 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void checkOffsetAge(){
-        //get last offset
-        //get the system time
-        //if there is an offset, compare to system time
-        //if offset older than 10 minutes, get a new one
-        //if no offset, get one
+        Log.i("INFO", "CHECKING OFFSET AGE");
+
+        //get last offset timestamp (seconds from epoch)
+        SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
+        Cursor c = db.rawQuery("SELECT * FROM offsets", null);
+        if (c.getCount() > 0){
+            c.moveToLast();
+            double storednct = c.getDouble(c.getColumnIndex("timestamp"));
+            //get the system time in seconds from epoch
+            double nct = System.currentTimeMillis() / 1000.0;
+
+            Log.i("INFO", "storednct: ".concat(Double.toString(storednct)));
+            Log.i("INFO", "nct: ".concat(Double.toString(nct)));
+
+            //if offset older than x seconds, get a new one
+            if ( (nct - storednct) > offsetAgeforResync ){
+                performSync();
+            }
+        }
+        else {
+            //if no offset, get one
+            performSync();
+        }
+        c.close();
+        db.close();
     }
 
     public void updateDisplay(){
