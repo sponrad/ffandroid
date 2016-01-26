@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Movie;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;

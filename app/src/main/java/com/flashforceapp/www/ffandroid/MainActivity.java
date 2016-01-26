@@ -182,9 +182,8 @@ public class MainActivity extends AppCompatActivity {
         imagebutton.setBackgroundResource(R.drawable.flashforwardthreeboxesgray);
 
         //TODO: animate the icon
-        AnimatedGifImageView animatedGifImageView = ((AnimatedGifImageView)findViewById(R.id.ff_icon));
-        animatedGifImageView.setAnimatedGif(R.drawable.animatedthreeboxes,
-                AnimatedGifImageView.TYPE.FIT_CENTER);
+        //AnimatedGifImageView animatedGifImageView = ((AnimatedGifImageView)findViewById(R.id.ff_icon));
+        //animatedGifImageView.setAnimatedGif(R.drawable.animatedthreeboxes, AnimatedGifImageView.TYPE.FIT_CENTER);
 
         SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
 
