@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
     public String selectedStoreId = "";
     public String selectedPrice = "";
     public double offsetAgeforResync = 600.0; // allowable offset age in seconds (600 = 10 min)
+    public String actionButtonStatus = "None";
     /*
     var actionButtonStatus = "None"
      */
@@ -149,6 +150,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1001) {
+            int responseCode = data.getIntExtra("RESPONSE_CODE", 0);
+            String purchaseData = data.getStringExtra("INAPP_PURCHASE_DATA");
+            String dataSignature = data.getStringExtra("INAPP_DATA_SIGNATURE");
+
+            if (resultCode == RESULT_OK) {
+                try {
+                    JSONObject jo = new JSONObject(purchaseData);
+                    String sku = jo.getString("productId");
+                    //alert("You have bought the " + sku + ". Excellent choice, adventurer!");
+                }
+                catch (JSONException e) {
+                    //alert("Failed to parse purchase data.");
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -167,6 +189,10 @@ public class MainActivity extends AppCompatActivity {
      * Called when the user clicks the Flash button
      */
     public void flash_handler(View view) {
+        switch (actionButtonStatus) {
+            case "None":
+                break;
+        }
         Log.i("INFO", "flash_handler called");
         // Do something in response to button
         Intent intent = new Intent(this, FlashActivity.class);
