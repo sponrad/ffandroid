@@ -192,6 +192,18 @@ public class MainActivity extends AppCompatActivity {
         switch (actionButtonStatus) {
             case "None":
                 break;
+            case "purchasing":
+                break;
+            case "flash":
+                break;
+            case "sync":
+                break;
+            case "buy":
+                break;
+            case "getfree":
+                break;
+            default:
+                break;
         }
         Log.i("INFO", "flash_handler called");
         // Do something in response to button
@@ -443,7 +455,40 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
             loadPatternInformation();
+            checkOwnership();
         }
+    }
+
+    public void checkOwnership(){
+        Boolean owned = false;
+
+        //TODO: check area for free flash, wherever that is
+
+        //then check against stored owned cheers
+        if (listOfOwnedPatterns().contains( selectedStoreId )) {
+            owned = true;
+        }
+
+        if (selectedPrice == "0.0"){
+            owned = true;
+        }
+
+        //change the display of the flash button and the actionButtonStatus variable
+        Button flash_button = (Button) findViewById(R.id.flash_button);
+
+        if (owned){
+            flash_button.setText("Flash");
+            actionButtonStatus = "flash";
+        }
+        else {
+            //TODO: check for if first item has been given for free
+            flash_button.setText(String.format("Get for Free"));
+            actionButtonStatus = "getfree";
+
+            flash_button.setText(String.format("Buy $%s", selectedPrice));
+            actionButtonStatus = "buy";
+        }
+
     }
 
     public void loadPatternInformation(){
@@ -576,6 +621,24 @@ public class MainActivity extends AppCompatActivity {
 
         //Attach the canvas to the ImageView
         myImageView.setImageDrawable(new BitmapDrawable(getResources(), tempBitmap));
+    }
+
+    public List<String> listOfOwnedPatterns(){
+        List<String> ownedPatterns = new ArrayList<String>();
+
+        SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
+        Cursor c = db.rawQuery("SELECT * FROM ownedpatterns", null);
+        if (c.getCount() > 0) {
+            c.moveToLast();
+            if (c.getString(c.getColumnIndex("storecode")) != "") {
+                ownedPatterns.add(c.getString(c.getColumnIndex("storecode")));
+            }
+        }
+
+        c.close();
+        db.close();
+
+        return ownedPatterns;
     }
 }
 
