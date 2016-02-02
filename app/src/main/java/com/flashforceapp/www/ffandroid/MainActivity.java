@@ -5,61 +5,45 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.res.AssetManager;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Movie;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.RectF;
-import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.StateListDrawable;
-import android.graphics.drawable.shapes.RectShape;
+
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+
 import android.widget.Button;
-import android.widget.Gallery;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import com.android.vending.billing.IInAppBillingService;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-import java.util.TimeZone;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -111,8 +95,6 @@ public class MainActivity extends AppCompatActivity {
         checkDatabase(); // check database and load data if needed
 
         checkOffsetAge(); //change appearance of flash force icon based on offset age, and run performSync if needed
-
-        //performSync();  // handled by checkOffsetAge
 
         updateDisplay();  //update screen based on pattern and ownership
 
@@ -190,13 +172,13 @@ public class MainActivity extends AppCompatActivity {
      */
     public void flash_handler(View view) {
         switch (actionButtonStatus) {
-            case "None":
-                break;
-            case "purchasing":
-                break;
             case "flash":
+                Intent intent = new Intent(this, FlashActivity.class);
+                intent.putExtra("PATTERNID", patternid);
+                startActivity(intent);
                 break;
             case "sync":
+                performSync();
                 break;
             case "buy":
                 break;
@@ -205,15 +187,6 @@ public class MainActivity extends AppCompatActivity {
             default:
                 break;
         }
-        Log.i("INFO", "flash_handler called");
-        // Do something in response to button
-        Intent intent = new Intent(this, FlashActivity.class);
-        //EditText editText = (EditText) findViewById(R.id.edit_message);
-        //String message = editText.getText().toString();
-        //intent.putExtra(EXTRA_MESSAGE, message);
-        intent.putExtra("PATTERNID", patternid);
-
-        startActivity(intent);
     }
 
     public void browse_handler(View view) {
