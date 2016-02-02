@@ -1,9 +1,11 @@
 package com.flashforceapp.www.ffandroid;
 
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -181,8 +183,13 @@ public class MainActivity extends AppCompatActivity {
                 performSync();
                 break;
             case "buy":
+                Button flash_button = (Button) findViewById(R.id.flash_button);
+                flash_button.setText("Purchasing");
+                actionButtonStatus = "purchasing";
+                buyFlash();
                 break;
             case "getfree":
+                purchaseFreeFlash();
                 break;
             default:
                 break;
@@ -267,6 +274,8 @@ public class MainActivity extends AppCompatActivity {
         db.execSQL("create table if not exists offsets(id integer primary key autoincrement, offset real, timestamp real)");
 
         db.execSQL("create table if not exists ownedpatterns(id integer primary key autoincrement, storecode text, name text, patternid integer)");
+
+        db.execSQL("create table if not exists freepattern(id integer primary key autoincrement, storecode text, name text, patternid integer)");
 
         AssetManager am = getBaseContext().getAssets();
         InputStream is = am.open("ffinput.csv"); //src/main/assets
@@ -612,6 +621,23 @@ public class MainActivity extends AppCompatActivity {
         db.close();
 
         return ownedPatterns;
+    }
+
+    public void buyFlash(){
+        //http://developer.android.com/google/play/billing/billing_integrate.html#billing-add-aidl
+        Bundle buyIntentBundle = mService.getBuyIntent(3, getPackageName(), selectedStoreId, "inapp", "devpayloadstring");
+        PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
+        startIntentSenderForResult(pendingIntent.getIntentSender(), 1001, new Intent(), Integer.valueOf(0), Integer.valueOf(0), Integer.valueOf(0));
+    }
+
+    public void purchaseFreeFlash(){
+        //store in shared preferences
+        SharedPreferences sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+
+        //put shared preferences in backup
+
+        //add flash to ownedpatterns
+        //add flash to freepattern
     }
 }
 
