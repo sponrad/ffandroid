@@ -36,16 +36,31 @@ public class SecondBrowseActivity extends AppCompatActivity {
 
         SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
 
-        Cursor c = db.rawQuery("SELECT name, id FROM patterns WHERE category='" + category + "' AND alt1='Home' UNION  SELECT name, id FROM patterns WHERE category='" + category + "' AND name NOT IN (SELECT name FROM patterns WHERE category='" + category + "' AND alt1='Home') GROUP BY name ORDER BY name", null);
-        if (c.getCount() > 0){
-            c.moveToFirst();
-            while(!c.isAfterLast()) {
-                values.add(c.getString(c.getColumnIndex("name")));
-                patternids.add(c.getString(c.getColumnIndex("id")));
-                c.moveToNext();
+        if (category != null && category.equals("My Flashes")){
+            Cursor c = db.rawQuery("SELECT name, id FROM ownedpatterns GROUP BY name ORDER BY name", null);
+            if (c.getCount() > 0) {
+                c.moveToFirst();
+                while (!c.isAfterLast()) {
+                    values.add(c.getString(c.getColumnIndex("name")));
+                    patternids.add(c.getString(c.getColumnIndex("id")));
+                    c.moveToNext();
+                }
             }
+            c.close();
         }
-        c.close();
+        else {
+            Cursor c = db.rawQuery("SELECT name, id FROM patterns WHERE category='" + category + "' AND alt1='Home' UNION  SELECT name, id FROM patterns WHERE category='" + category + "' AND name NOT IN (SELECT name FROM patterns WHERE category='" + category + "' AND alt1='Home') GROUP BY name ORDER BY name", null);
+            if (c.getCount() > 0) {
+                c.moveToFirst();
+                while (!c.isAfterLast()) {
+                    values.add(c.getString(c.getColumnIndex("name")));
+                    patternids.add(c.getString(c.getColumnIndex("id")));
+                    c.moveToNext();
+                }
+            }
+            c.close();
+        }
+
         db.close();
 
         // Define a new Adapter
