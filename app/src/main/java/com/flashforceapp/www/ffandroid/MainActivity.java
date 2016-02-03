@@ -632,12 +632,20 @@ public class MainActivity extends AppCompatActivity {
 
     public void purchaseFreeFlash(){
         //store in shared preferences
-        SharedPreferences sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.userpref), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(getString(R.string.freeFlashString), selectedStoreId);
+        editor.commit();
 
         //put shared preferences in backup
 
+        SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
+        //db.execSQL("insert into offsets values(NULL, '"+ Double.toString(offset) + "', '" + Double.toString(nct) +"')");
+        //db.execSQL("create table if not exists ownedpatterns(id integer primary key autoincrement, storecode text, name text, patternid integer)");
         //add flash to ownedpatterns
         //add flash to freepattern
+
+        //update actionbuttonstatus and flash_button text
     }
 }
 
