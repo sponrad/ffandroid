@@ -50,7 +50,7 @@ import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
-    public double avgOffset = 0.0;
+    //public double avgOffset = 0.0;
     public List<Double> offsets = new ArrayList<Double>();
     public String patternid = "";
     public String team = "";
@@ -253,7 +253,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void checkDatabase() {
-        if (ffdbLoaded == false && patternid == "") {
+        if (ffdbLoaded == false && patternid.equals("")) {
             try {
                 loadDatabase();
                 Log.i("INFO","DATABASE LOADED");
@@ -423,7 +423,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void updateDisplay(){
-        if (patternid == ""){
+        if (patternid.equals("")){
             //no pattern selected
             Button team_button = (Button) findViewById(R.id.team_button);
             Button outfit_button = (Button) findViewById(R.id.outfit_button);
@@ -445,14 +445,19 @@ public class MainActivity extends AppCompatActivity {
     public void checkOwnership(){
         Boolean owned = false;
 
-        //TODO: check area for free flash, wherever that is
+        //TODO: check area for free flash, shared prefs
+        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.userpref), Context.MODE_PRIVATE);
+        String defaultValue = "";
+        if (selectedStoreId.equals(sharedPref.getString(getString(R.string.freeFlashString), defaultValue)) ){
+            owned = true;
+        }
 
         //then check against stored owned cheers
         if (listOfOwnedPatterns().contains( selectedStoreId )) {
             owned = true;
         }
 
-        if (selectedPrice == "0.0"){
+        if (selectedPrice.equals("0.0") ){
             owned = true;
         }
 
@@ -465,7 +470,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
             //TODO: check for if first item has been given for free
-            flash_button.setText(String.format("Get for Free"));
+            flash_button.setText("Get for Free");
             actionButtonStatus = "getfree";
 
             flash_button.setText(String.format("Buy $%s", selectedPrice));
@@ -548,7 +553,6 @@ public class MainActivity extends AppCompatActivity {
         Point size = new Point();
         display.getSize(size);
         int width = size.x;
-        int height = size.y;
 
         ImageView myImageView = (ImageView) findViewById(R.id.canvas_space);
         Bitmap myBitmap = Bitmap.createBitmap(width, 100, Bitmap.Config.ARGB_8888);
@@ -613,7 +617,7 @@ public class MainActivity extends AppCompatActivity {
         Cursor c = db.rawQuery("SELECT * FROM ownedpatterns", null);
         if (c.getCount() > 0) {
             c.moveToLast();
-            if (c.getString(c.getColumnIndex("storecode")) != "") {
+            if (!c.getString(c.getColumnIndex("storecode")).equals("") ) {
                 ownedPatterns.add(c.getString(c.getColumnIndex("storecode")));
             }
         }
@@ -636,7 +640,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.userpref), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(getString(R.string.freeFlashString), selectedStoreId);
-        editor.commit();
+        editor.apply();
 
         //put shared preferences in backup
         BackupManager backupManager = new BackupManager(getBaseContext());

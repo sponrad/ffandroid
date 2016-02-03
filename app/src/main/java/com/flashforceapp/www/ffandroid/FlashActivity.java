@@ -19,17 +19,14 @@ import java.util.TimerTask;
 
 public class FlashActivity extends AppCompatActivity {
 
-    private double interval = 0.25;
+    double interval = 0.25;
     private int color = 0;
-    private ArrayList<String> colors = new ArrayList<String>();
-    private double[] brightnessArray = new double[0];
+    private ArrayList<String> colors = new ArrayList<>();
+    //private double[] brightnessArray = new double[0];
     private Timer timer = new Timer();
     private String patternid = "";
     private String givenTiming = "6_4_2";
-    private List<String> givenColors = new ArrayList<String>();
-
-
-    double current_time = System.currentTimeMillis() / 1000.0;
+    private List<String> givenColors = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +47,6 @@ public class FlashActivity extends AppCompatActivity {
         }
 
         mainFlash();
-
     }
 
     @Override
@@ -83,7 +79,7 @@ public class FlashActivity extends AppCompatActivity {
         // Find the root view
         View root = someView.getRootView();
 
-        if (patternid != ""){
+        if (patternid.equals("")){
             //assign givenTiming and givenColors
             SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
 
@@ -111,6 +107,9 @@ public class FlashActivity extends AppCompatActivity {
                 }
             }
 
+            c.close();
+            db.close();
+
         }
 
         String[] splitTiming = givenTiming.split("_");    //contains number of beats for each color
@@ -133,6 +132,7 @@ public class FlashActivity extends AppCompatActivity {
             c.moveToLast();
             offset = c.getDouble(c.getColumnIndex("offset"));
         }
+        c.close();
         db.close();
 
         Log.i("INFO", "OFFSET FROM DB: ".concat( Double.toString(offset)));
@@ -180,6 +180,6 @@ public class FlashActivity extends AppCompatActivity {
             });
 
         }
-    };
+    }
 
 }

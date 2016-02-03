@@ -4,7 +4,7 @@ import android.app.backup.BackupAgentHelper;
 import android.app.backup.SharedPreferencesBackupHelper;
 
 /**
- * Created by conradframe on 2/3/16.
+ * Created by conradframe on 2/3/16. Changed
  */
 public class FFBackupAgent extends BackupAgentHelper {
     // The name of the SharedPreferences file
