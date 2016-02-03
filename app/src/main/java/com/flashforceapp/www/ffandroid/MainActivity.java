@@ -442,7 +442,7 @@ public class MainActivity extends AppCompatActivity {
     public void checkOwnership(){
         Boolean owned = false;
 
-        //TODO: check area for free flash, shared prefs
+        //check area for free flash, shared prefs
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.userpref), Context.MODE_PRIVATE);
         String defaultValue = "";
         if (selectedStoreId.equals(sharedPref.getString(getString(R.string.freeFlashString), defaultValue)) ){
@@ -466,14 +466,20 @@ public class MainActivity extends AppCompatActivity {
             actionButtonStatus = "flash";
         }
         else {
-            //TODO: check for if first item has been given for free
-            flash_button.setText(getString(R.string.textgetfree));
-            actionButtonStatus = "getfree";
-
-            flash_button.setText(String.format("Buy $%s", selectedPrice));
-            actionButtonStatus = "buy";
+            //check for if first item has been given for free
+            SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
+            Cursor c = db.rawQuery("SELECT * FROM freepattern", null);
+            if (c.getCount() == 0) {
+                flash_button.setText(getString(R.string.textgetfree));
+                actionButtonStatus = "getfree";
+            }
+            else{
+                flash_button.setText(String.format("Buy $%s", selectedPrice));
+                actionButtonStatus = "buy";
+            }
+            c.close();
+            db.close();
         }
-
     }
 
     public void loadPatternInformation(){
