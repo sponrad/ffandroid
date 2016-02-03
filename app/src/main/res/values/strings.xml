@@ -11,4 +11,8 @@
     <string name="dbVersionString">ffdb01</string>
     <string name="userpref">com.flashforceapp.www.ffandroid.userPrefString</string>
     <string name="prefkey">PrefKey</string>
+
+    <string name="textpurchasing">Purchasing</string>
+    <string name="textflash">Flash</string>
+    <string name="textgetfree">Get for Free</string>
 </resources>

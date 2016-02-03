@@ -1,6 +1,5 @@
 package com.flashforceapp.www.ffandroid;
 
-import android.app.PendingIntent;
 import android.app.backup.BackupManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -51,7 +50,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     //public double avgOffset = 0.0;
-    public List<Double> offsets = new ArrayList<Double>();
+    //public List<Double> offsets = new ArrayList<Double>();
     public String patternid = "";
     public String team = "";
     public boolean ffdbLoaded = false;
@@ -185,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case "buy":
                 Button flash_button = (Button) findViewById(R.id.flash_button);
-                flash_button.setText("Purchasing");
+                flash_button.setText(getString(R.string.textpurchasing));
                 actionButtonStatus = "purchasing";
                 buyFlash();
                 break;
@@ -253,14 +252,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void checkDatabase() {
-        if (ffdbLoaded == false && patternid.equals("")) {
+        if (!ffdbLoaded && patternid.equals("")) {
             try {
                 loadDatabase();
                 Log.i("INFO","DATABASE LOADED");
             } catch (IOException e) {
                 //report on this
             }
-        } else {
         }
     }
 
@@ -282,7 +280,7 @@ public class MainActivity extends AppCompatActivity {
         InputStream is = am.open("ffinput.csv"); //src/main/assets
         BufferedReader buffer = new BufferedReader(new InputStreamReader(is, "UTF-8"));
 
-        String line = "";
+        String line;
         String str1 = "insert into patterns values(NULL,";
         String str2 = ");";
 
@@ -318,15 +316,14 @@ public class MainActivity extends AppCompatActivity {
 
 
     class GetOffset extends AsyncTask<Void, Void, String> {
-
-        private double offset;
-        private double ping;
-        private double count = 0.0;
+        //private double offset;
+        //private double ping;
+        //private double count = 0.0;
         private double ct;
         private double nct;
 
 
-        private Exception exception;
+        //private Exception exception;
 
         protected String doInBackground(Void... urls) {
             try {
@@ -364,7 +361,7 @@ public class MainActivity extends AppCompatActivity {
                 nct = System.currentTimeMillis() / 1000.0;
 
                 JSONObject object = (JSONObject) new JSONTokener(response).nextValue();
-                String date = object.getString("date");
+                //String date = object.getString("date");
                 double epoch = object.getDouble("epoch");
 
                 Log.i("INFO", "GOT AN EPOCH: ".concat( Double.toString(epoch) ) );
@@ -465,12 +462,12 @@ public class MainActivity extends AppCompatActivity {
         Button flash_button = (Button) findViewById(R.id.flash_button);
 
         if (owned){
-            flash_button.setText("Flash");
+            flash_button.setText(getString(R.string.textflash));
             actionButtonStatus = "flash";
         }
         else {
             //TODO: check for if first item has been given for free
-            flash_button.setText("Get for Free");
+            flash_button.setText(getString(R.string.textgetfree));
             actionButtonStatus = "getfree";
 
             flash_button.setText(String.format("Buy $%s", selectedPrice));
@@ -488,8 +485,6 @@ public class MainActivity extends AppCompatActivity {
 
         Cursor c = db.rawQuery("SELECT * FROM patterns WHERE id='" + patternid + "'", null);
         c.moveToLast();
-
-        String[] timing = c.getString(c.getColumnIndex("timing")).split("_");
 
         browse_button.setText(c.getString(c.getColumnIndex("category")));
         team_button.setText(team);
@@ -512,8 +507,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void drawBoxes(){
-        String givenTiming = "";
-        List<String> givenColors = new ArrayList<String>();
+        String givenTiming;
+        List<String> givenColors = new ArrayList<>();
 
         SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
         Cursor c = db.rawQuery("SELECT * FROM patterns WHERE id='" + patternid + "'", null);
@@ -611,7 +606,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public List<String> listOfOwnedPatterns(){
-        List<String> ownedPatterns = new ArrayList<String>();
+        List<String> ownedPatterns = new ArrayList<>();
 
         SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
         Cursor c = db.rawQuery("SELECT * FROM ownedpatterns", null);
