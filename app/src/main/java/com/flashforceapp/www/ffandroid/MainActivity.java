@@ -642,10 +642,17 @@ public class MainActivity extends AppCompatActivity {
         backupManager.dataChanged();
 
         SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
-        //db.execSQL("insert into offsets values(NULL, '"+ Double.toString(offset) + "', '" + Double.toString(nct) +"')");
+
         //db.execSQL("create table if not exists ownedpatterns(id integer primary key autoincrement, storecode text, name text, patternid integer)");
-        //add flash to ownedpatterns
-        //add flash to freepattern
+        Cursor c = db.rawQuery("SELECT * FROM patterns WHERE id='" + patternid + "'", null);
+        if (c.getCount() > 0){
+            int patternid = c.getInt(c.getColumnIndex("id"));
+            String storecode = c.getString(c.getColumnIndex("storecode"));
+            String name = c.getString(c.getColumnIndex("name"));
+            db.execSQL(String.format("insert into ownedpatterns values(NULL,%s,%s,%d)", storecode, name, patternid));
+            db.execSQL(String.format("insert into freepattern values(NULL,%s,%s,%d)", storecode, name, patternid));
+        }
+        c.close();
         db.close();
 
         //update actionbuttonstatus and flash_button text
