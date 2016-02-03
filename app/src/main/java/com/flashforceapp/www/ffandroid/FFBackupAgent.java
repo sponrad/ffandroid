@@ -8,10 +8,10 @@ import android.app.backup.SharedPreferencesBackupHelper;
  */
 public class FFBackupAgent extends BackupAgentHelper {
     // The name of the SharedPreferences file
-    static final String PREFS = "user_preferences";
+    String PREFS = getString(R.string.userpref);
 
     // A key to uniquely identify the set of backup data
-    static final String PREFS_BACKUP_KEY = "prefs";
+    String PREFS_BACKUP_KEY = getString(R.string.prefkey);
 
     // Allocate a helper and add it to the backup agent
     @Override

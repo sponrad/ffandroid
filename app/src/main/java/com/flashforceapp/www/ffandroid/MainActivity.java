@@ -1,6 +1,7 @@
 package com.flashforceapp.www.ffandroid;
 
 import android.app.PendingIntent;
+import android.app.backup.BackupManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -625,9 +626,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void buyFlash(){
         //http://developer.android.com/google/play/billing/billing_integrate.html#billing-add-aidl
-        Bundle buyIntentBundle = mService.getBuyIntent(3, getPackageName(), selectedStoreId, "inapp", "devpayloadstring");
-        PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
-        startIntentSenderForResult(pendingIntent.getIntentSender(), 1001, new Intent(), Integer.valueOf(0), Integer.valueOf(0), Integer.valueOf(0));
+        //Bundle buyIntentBundle = mService.getBuyIntent(3, getPackageName(), selectedStoreId, "inapp", "devpayloadstring");
+        //PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
+        //startIntentSenderForResult(pendingIntent.getIntentSender(), 1001, new Intent(), Integer.valueOf(0), Integer.valueOf(0), Integer.valueOf(0));
     }
 
     public void purchaseFreeFlash(){
@@ -638,12 +639,15 @@ public class MainActivity extends AppCompatActivity {
         editor.commit();
 
         //put shared preferences in backup
+        BackupManager backupManager = new BackupManager(getBaseContext());
+        backupManager.dataChanged();
 
         SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
         //db.execSQL("insert into offsets values(NULL, '"+ Double.toString(offset) + "', '" + Double.toString(nct) +"')");
         //db.execSQL("create table if not exists ownedpatterns(id integer primary key autoincrement, storecode text, name text, patternid integer)");
         //add flash to ownedpatterns
         //add flash to freepattern
+        db.close();
 
         //update actionbuttonstatus and flash_button text
     }
