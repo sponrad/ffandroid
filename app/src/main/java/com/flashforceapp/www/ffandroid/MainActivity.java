@@ -1,5 +1,6 @@
 package com.flashforceapp.www.ffandroid;
 
+import android.app.PendingIntent;
 import android.app.backup.BackupManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -87,8 +88,7 @@ public class MainActivity extends AppCompatActivity {
             team = extras.getString("TEAM");
         }
 
-        Intent serviceIntent =
-                new Intent("com.android.vending.billing.InAppBillingService.BIND");
+        Intent serviceIntent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
         serviceIntent.setPackage("com.android.vending");
         bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
 
@@ -631,9 +631,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void buyFlash(){
         //http://developer.android.com/google/play/billing/billing_integrate.html#billing-add-aidl
-        //Bundle buyIntentBundle = mService.getBuyIntent(3, getPackageName(), selectedStoreId, "inapp", "devpayloadstring");
-        //PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
-        //startIntentSenderForResult(pendingIntent.getIntentSender(), 1001, new Intent(), Integer.valueOf(0), Integer.valueOf(0), Integer.valueOf(0));
+        if (!selectedStoreId.equals("")) {
+            Bundle buyIntentBundle = mService.getBuyIntent(3, getPackageName(), selectedStoreId, "inapp", "devpayloadstring");
+            PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
+            startIntentSenderForResult(pendingIntent.getIntentSender(), 1001, new Intent(), Integer.valueOf(0), Integer.valueOf(0), Integer.valueOf(0));
+        }
     }
 
     public void purchaseFreeFlash(){
