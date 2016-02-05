@@ -33,6 +33,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.android.vending.billing.IInAppBillingService;
+import com.anjlab.android.iab.v3.BillingProcessor;
+import com.anjlab.android.iab.v3.TransactionDetails;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,7 +51,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements BillingProcessor.IBillingHandler {
+    BillingProcessor bp;
     //public double avgOffset = 0.0;
     //public List<Double> offsets = new ArrayList<Double>();
     public String patternid = "";
@@ -62,35 +65,19 @@ public class MainActivity extends AppCompatActivity {
     /*
     var actionButtonStatus = "None"
      */
-    IInAppBillingService mService;
-
-    ServiceConnection mServiceConn = new ServiceConnection() {
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            mService = null;
-        }
-
-        @Override
-        public void onServiceConnected(ComponentName name,
-                                       IBinder service) {
-            mService = IInAppBillingService.Stub.asInterface(service);
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        bp = new BillingProcessor(this, "YOUR LICENSE KEY FROM GOOGLE PLAY CONSOLE HERE", this);
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             patternid = extras.getString("PATTERNID");
             team = extras.getString("TEAM");
         }
-
-        Intent serviceIntent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
-        serviceIntent.setPackage("com.android.vending");
-        bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
 
         //initialStates();
 
@@ -127,31 +114,46 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onDestroy() {
+        if (bp != null)
+            bp.release();
         super.onDestroy();
-        if (mService != null) {
-            unbindService(mServiceConn);
-        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 1001) {
-            int responseCode = data.getIntExtra("RESPONSE_CODE", 0);
-            String purchaseData = data.getStringExtra("INAPP_PURCHASE_DATA");
-            String dataSignature = data.getStringExtra("INAPP_DATA_SIGNATURE");
+        if (!bp.handleActivityResult(requestCode, resultCode, data))
+            super.onActivityResult(requestCode, resultCode, data);
+    }
 
-            if (resultCode == RESULT_OK) {
-                try {
-                    JSONObject jo = new JSONObject(purchaseData);
-                    String sku = jo.getString("productId");
-                    //alert("You have bought the " + sku + ". Excellent choice, adventurer!");
-                }
-                catch (JSONException e) {
-                    //alert("Failed to parse purchase data.");
-                    e.printStackTrace();
-                }
-            }
-        }
+    @Override
+    public void onBillingInitialized() {
+        /*
+         * Called when BillingProcessor was initialized and it's ready to purchase
+         */
+    }
+
+    @Override
+    public void onProductPurchased(String productId, TransactionDetails details) {
+        /*
+         * Called when requested PRODUCT ID was successfully purchased
+         */
+        //TODO: add the product to owned table
+        //TODO: change the flash button and status
+    }
+
+    @Override
+    public void onBillingError(int errorCode, Throwable error) {
+        /*
+         * Called when some error occurred. See Constants class for more details
+         */
+    }
+
+    @Override
+    public void onPurchaseHistoryRestored() {
+        /*
+         * Called when purchase history was restored and the list of all owned PRODUCT ID's
+         * was loaded from Google Play
+         */
     }
 
     @Override
@@ -630,10 +632,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void buyFlash(){
-        //http://developer.android.com/google/play/billing/billing_integrate.html#billing-add-aidl
-            //Bundle buyIntentBundle = mService.getBuyIntent(3, getPackageName(), selectedStoreId, "inapp", "devpayloadstring");
-            //PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
-            //startIntentSenderForResult(pendingIntent.getIntentSender(), 1001, new Intent(), Integer.valueOf(0), Integer.valueOf(0), Integer.valueOf(0));
+        bp.purchase(this, selectedStoreId);
     }
 
     public void purchaseFreeFlash(){
