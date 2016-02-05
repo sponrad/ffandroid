@@ -169,6 +169,13 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
          * was loaded from Google Play
          */
         //TODO: add all of the returned products to owned table
+        /*
+        for(String sku : bp.listOwnedProducts())
+                    Log.d(LOG_TAG, "Owned Managed Product: " + sku);
+                for(String sku : bp.listOwnedSubscriptions())
+                    Log.d(LOG_TAG, "Owned Subscription: " + sku);
+                updateTextViews();
+         */
     }
 
     @Override
