@@ -137,8 +137,23 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
         /*
          * Called when requested PRODUCT ID was successfully purchased
          */
-        //TODO: add the product to owned table
-        //TODO: change the flash button and status
+        SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
+
+        //db.execSQL("create table if not exists ownedpatterns(id integer primary key autoincrement, storecode text, name text, patternid integer)");
+        Cursor c = db.rawQuery("SELECT * FROM patterns WHERE id='" + patternid + "'", null);
+        if (c.getCount() > 0){
+            int patternid = c.getInt(c.getColumnIndex("id"));
+            String storecode = c.getString(c.getColumnIndex("storecode"));
+            String name = c.getString(c.getColumnIndex("name"));
+            db.execSQL(String.format("insert into ownedpatterns values(NULL,%s,%s,%d)", storecode, name, patternid));
+        }
+        c.close();
+        db.close();
+
+        actionButtonStatus = "flash";
+        Button flash_button = (Button) findViewById(R.id.flash_button);
+        flash_button.setText(getString(R.string.textflash));
+
     }
 
     @Override
@@ -632,7 +647,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
     }
 
     public void buyFlash(){
-        bp.purchase(this, selectedStoreId);
+        bp.purchase(this, selectedStoreId); //this is completed in onProductPurchased()
     }
 
     public void purchaseFreeFlash(){
@@ -660,7 +675,9 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
         c.close();
         db.close();
 
-        //update actionbuttonstatus and flash_button text
+        actionButtonStatus = "flash";
+        Button flash_button = (Button) findViewById(R.id.flash_button);
+        flash_button.setText(getString(R.string.textflash));
     }
 }
 
