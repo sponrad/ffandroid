@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        bp = new BillingProcessor(this, "YOUR LICENSE KEY FROM GOOGLE PLAY CONSOLE HERE", this);
+        bp = new BillingProcessor(this, "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuwrizMHIUtw3NtOCP4NxIeYqbASNEI8gxjEMBiKJvQ/RVMTGezdwd0HzbY/FNEw4n/v162PsejIAw8Y8rBP0mYvl/QKkHx+teOBABzZJkMItUSNIZQXW6OYTFI4OYQedOpSbjYka0BNgKaJI5919gDAtlGi/6nDW/eh6wrZjsvHZLJS7vBtQdtHST8pfdPbWVIBo/J33YeTjFyDHBAPnOGIKwAqryi2rTGKP7EeWJnCUPUD13UkEg9wEO8TYKyS/6WDPg+dkzXEblDaonJBjLpGky1VZnpzytAuhmrkntRlRZ/rAnpPYydv3+Z8+HGyfER1Rt0rbfFetXZMalzVETwIDAQAB", this);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -139,7 +139,6 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
          */
         SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
 
-        //db.execSQL("create table if not exists ownedpatterns(id integer primary key autoincrement, storecode text, name text, patternid integer)");
         Cursor c = db.rawQuery("SELECT * FROM patterns WHERE id='" + patternid + "'", null);
         if (c.getCount() > 0){
             int patternid = c.getInt(c.getColumnIndex("id"));
@@ -169,6 +168,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
          * Called when purchase history was restored and the list of all owned PRODUCT ID's
          * was loaded from Google Play
          */
+        //TODO: add all of the returned products to owned table
     }
 
     @Override
