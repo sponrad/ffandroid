@@ -631,11 +631,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void buyFlash(){
         //http://developer.android.com/google/play/billing/billing_integrate.html#billing-add-aidl
-        if (!selectedStoreId.equals("")) {
-            Bundle buyIntentBundle = mService.getBuyIntent(3, getPackageName(), selectedStoreId, "inapp", "devpayloadstring");
-            PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
-            startIntentSenderForResult(pendingIntent.getIntentSender(), 1001, new Intent(), Integer.valueOf(0), Integer.valueOf(0), Integer.valueOf(0));
-        }
+            //Bundle buyIntentBundle = mService.getBuyIntent(3, getPackageName(), selectedStoreId, "inapp", "devpayloadstring");
+            //PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
+            //startIntentSenderForResult(pendingIntent.getIntentSender(), 1001, new Intent(), Integer.valueOf(0), Integer.valueOf(0), Integer.valueOf(0));
     }
 
     public void purchaseFreeFlash(){
