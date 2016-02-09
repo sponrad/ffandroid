@@ -7,7 +7,7 @@
     <string name="title_activity_browse">BrowseActivity</string>
     <string name="title_activity_second_browse">SecondBrowseActivity</string>
     <string name="title_activity_alternate">AlternateActivity</string>
-    <string name="freeFlashString">ffb001</string>
+    <string name="freeFlashString">ffb003</string>
     <string name="dbVersionString">ffdb01</string>
     <string name="userpref">com.flashforceapp.www.ffandroid.userPrefString</string>
     <string name="prefkey">PrefKey</string>
