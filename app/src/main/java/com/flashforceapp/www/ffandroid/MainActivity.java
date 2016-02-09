@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
             c.moveToLast();
             String storecode = c.getString(c.getColumnIndex("storecode"));
             String name = c.getString(c.getColumnIndex("name"));
-            db.execSQL(String.format("insert into ownedpatterns values(NULL,'%s','%s','%d')", storecode, name, patternid));
+            db.execSQL("insert into ownedpatterns values(NULL,'"+storecode+"','"+name+"','"+String.valueOf(patternid)+"')");
         }
         c.close();
         db.close();
