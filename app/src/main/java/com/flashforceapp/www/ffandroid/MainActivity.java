@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
     public boolean ffdbLoaded = false;
     public String selectedStoreId = "";
     public String selectedPrice = "";
-    public double offsetAgeforResync = 600.0; // allowable offset age in seconds (600 = 10 min)
+    public double offsetAgeforResync = 300.0; // allowable offset age in seconds (600 = 10 min)
     public String actionButtonStatus = "None";
     /*
     var actionButtonStatus = "None"
