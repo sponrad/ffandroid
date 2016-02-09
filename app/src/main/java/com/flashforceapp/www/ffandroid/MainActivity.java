@@ -651,7 +651,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
     public void buyFlash(){
 
         boolean isAvailable = BillingProcessor.isIabServiceAvailable(getBaseContext());
-        if(!isAvailable) {
+        if(isAvailable) {
             // continue
             bp.purchase(this, selectedStoreId); //this is completed in onProductPurchased()
         }
