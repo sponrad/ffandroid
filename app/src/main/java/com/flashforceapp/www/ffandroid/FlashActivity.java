@@ -79,7 +79,7 @@ public class FlashActivity extends AppCompatActivity {
         // Find the root view
         View root = someView.getRootView();
 
-        if (patternid.equals("")){
+        if (!patternid.equals("")){
             //assign givenTiming and givenColors
             SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
 

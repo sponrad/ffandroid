@@ -287,6 +287,12 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
 
         db.execSQL("drop table if exists patterns");
 
+        db.execSQL("drop table if exists offsets");
+
+        db.execSQL("drop table if exists ownedpatterns");
+
+        db.execSQL("drop table if exists freepattern");
+
         db.execSQL("create table if not exists patterns(id integer primary key autoincrement, storecode text, name text, groupid text, category text, timing text, price real, pattern1 text, pattern2 text, pattern3 text, pattern4 text, pattern5 text, alt1 text)");
 
         db.execSQL("create table if not exists offsets(id integer primary key autoincrement, offset real, timestamp real)");
