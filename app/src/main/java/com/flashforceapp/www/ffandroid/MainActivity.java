@@ -468,11 +468,13 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
         Boolean owned = false;
 
         //check area for free flash, shared prefs
+        /*
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.userpref), Context.MODE_PRIVATE);
         String defaultValue = "";
         if (selectedStoreId.equals(sharedPref.getString(getString(R.string.freeFlashString), defaultValue)) ){
             owned = true;
         }
+        */
 
         //then check against stored owned cheers
         if (listOfOwnedPatterns().contains( selectedStoreId )) {
@@ -665,6 +667,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
 
     public void purchaseFreeFlash(){
         //store in shared preferences
+        /*
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.userpref), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(getString(R.string.freeFlashString), selectedStoreId);
@@ -673,10 +676,11 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
         //put shared preferences in backup
         BackupManager backupManager = new BackupManager(getBaseContext());
         backupManager.dataChanged();
+        */
 
+        //store in ownedpatterns and freepattern
         SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
 
-        //db.execSQL("create table if not exists ownedpatterns(id integer primary key autoincrement, storecode text, name text, patternid integer)");
         Cursor c = db.rawQuery("SELECT * FROM patterns WHERE id='" + patternid + "'", null);
         if (c.getCount() > 0){
             c.moveToLast();
