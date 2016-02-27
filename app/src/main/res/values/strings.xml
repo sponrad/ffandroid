@@ -15,4 +15,7 @@
     <string name="textpurchasing">Purchasing</string>
     <string name="textflash">Flash</string>
     <string name="textgetfree">Get for Free</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">Ok</string>
+    <string name="freepurchaseprompt">Do you want to use your one free flash for this product?</string>
 </resources>

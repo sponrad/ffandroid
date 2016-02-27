@@ -1,7 +1,9 @@
 package com.flashforceapp.www.ffandroid;
 
+import android.app.AlertDialog;
 import android.app.backup.BackupManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
@@ -664,36 +666,56 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
     }
 
     public void purchaseFreeFlash(){
-        //store in shared preferences
-        /*
-        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.userpref), Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(getString(R.string.freeFlashString), selectedStoreId);
-        editor.apply();
 
-        //put shared preferences in backup
-        BackupManager backupManager = new BackupManager(getBaseContext());
-        backupManager.dataChanged();
-        */
+        AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext());
+        // Add the buttons
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked OK button
+                //store in shared preferences
+                /*
+                SharedPreferences sharedPref = getSharedPreferences(getString(R.string.userpref), Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString(getString(R.string.freeFlashString), selectedStoreId);
+                editor.apply();
 
-        //store in ownedpatterns and freepattern
-        SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
+                //put shared preferences in backup
+                BackupManager backupManager = new BackupManager(getBaseContext());
+                backupManager.dataChanged();
+                */
 
-        Cursor c = db.rawQuery("SELECT * FROM patterns WHERE id='" + patternid + "'", null);
-        if (c.getCount() > 0){
-            c.moveToLast();
-            String storecode = c.getString(c.getColumnIndex("storecode"));
-            String name = c.getString(c.getColumnIndex("name"));
-            db.execSQL("insert into ownedpatterns values(NULL,'"+storecode+"','"+name+"','"+String.valueOf(patternid)+"')");
-            db.execSQL("insert into freepattern values(NULL,'"+storecode+"','"+name+"','"+String.valueOf(patternid)+"')");
-        }
-        c.close();
-        db.close();
+                //store in ownedpatterns and freepattern
+                SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
 
-        actionButtonStatus = "flash";
-        Button flash_button = (Button) findViewById(R.id.flash_button);
-        flash_button.setText(getString(R.string.textflash));
+                Cursor c = db.rawQuery("SELECT * FROM patterns WHERE id='" + patternid + "'", null);
+                if (c.getCount() > 0){
+                    c.moveToLast();
+                    String storecode = c.getString(c.getColumnIndex("storecode"));
+                    String name = c.getString(c.getColumnIndex("name"));
+                    db.execSQL("insert into ownedpatterns values(NULL,'"+storecode+"','"+name+"','"+String.valueOf(patternid)+"')");
+                    db.execSQL("insert into freepattern values(NULL,'"+storecode+"','"+name+"','"+String.valueOf(patternid)+"')");
+                }
+                c.close();
+                db.close();
+
+                actionButtonStatus = "flash";
+                Button flash_button = (Button) findViewById(R.id.flash_button);
+                flash_button.setText(getString(R.string.textflash));
+
+            }
+        });
+
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+            }
+        });
+        // Set other dialog properties
+        builder.setMessage(R.string.freepurchaseprompt);
+
+        // Create the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
     }
 }
-
-
