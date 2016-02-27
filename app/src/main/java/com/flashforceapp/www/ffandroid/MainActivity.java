@@ -147,7 +147,6 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
         actionButtonStatus = "flash";
         Button flash_button = (Button) findViewById(R.id.flash_button);
         flash_button.setText(getString(R.string.textflash));
-
     }
 
     @Override
@@ -288,10 +287,6 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
         db.execSQL("drop table if exists patterns");
 
         db.execSQL("drop table if exists offsets");
-
-        //db.execSQL("drop table if exists ownedpatterns");
-
-        //db.execSQL("drop table if exists freepattern");
 
         db.execSQL("create table if not exists patterns(id integer primary key autoincrement, storecode text, name text, groupid text, category text, timing text, price real, pattern1 text, pattern2 text, pattern3 text, pattern4 text, pattern5 text, alt1 text)");
 
@@ -644,9 +639,12 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
         SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
         Cursor c = db.rawQuery("SELECT * FROM ownedpatterns", null);
         if (c.getCount() > 0) {
-            c.moveToLast();
-            if (!c.getString(c.getColumnIndex("storecode")).equals("") ) {
-                ownedPatterns.add(c.getString(c.getColumnIndex("storecode")));
+            c.moveToFirst();
+            while (!c.isAfterLast()){
+                if (!c.getString(c.getColumnIndex("storecode")).equals("") ) {
+                    ownedPatterns.add(c.getString(c.getColumnIndex("storecode")));
+                }
+                c.moveToNext();
             }
         }
 
