@@ -164,14 +164,22 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
          * Called when purchase history was restored and the list of all owned PRODUCT ID's
          * was loaded from Google Play
          */
-        //TODO: add all of the returned products to owned table
-        /*
-        for(String sku : bp.listOwnedProducts())
-                    Log.d(LOG_TAG, "Owned Managed Product: " + sku);
-                for(String sku : bp.listOwnedSubscriptions())
-                    Log.d(LOG_TAG, "Owned Subscription: " + sku);
-                updateTextViews();
-         */
+        SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
+
+        for(String sku : bp.listOwnedProducts()) {
+            Log.i("INFO", "Owned Managed Product: " + sku);
+
+            Cursor c = db.rawQuery("SELECT * FROM patterns WHERE storecode='" + sku + "'", null);
+            if (c.getCount() > 0){
+                c.moveToLast();
+                String id = c.getString(c.getColumnIndex("id"));
+                String name = c.getString(c.getColumnIndex("name"));
+                db.execSQL("insert into ownedpatterns values(NULL,'"+sku+"','"+name+"','"+id+"')");
+            }
+            c.close();
+        }
+
+        db.close();
     }
 
     @Override
@@ -275,6 +283,9 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
         if (patternid.equals("")) {
             try {
                 loadDatabase();
+
+                //TODO: enable load owned purchases
+                bp.loadOwnedPurchasesFromGoogle();
                 Log.i("INFO","DATABASE LOADED");
             } catch (IOException e) {
                 //report on this
