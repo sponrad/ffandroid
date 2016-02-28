@@ -272,7 +272,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
     }
 
     public void checkDatabase() {
-        if (!ffdbLoaded && patternid.equals("")) {
+        if (patternid.equals("")) {
             try {
                 loadDatabase();
                 Log.i("INFO","DATABASE LOADED");
