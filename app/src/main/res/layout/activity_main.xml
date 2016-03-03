@@ -30,6 +30,7 @@
         android:gravity="left"
         android:onClick="browse_handler"
         android:paddingLeft="20px"
+        android:paddingTop="20px"
         />
 
     <Button
@@ -44,7 +45,7 @@
         android:gravity="left"
         android:onClick="second_browse_handler"
         android:paddingLeft="20px"
-
+        android:paddingTop="20px"
         />
 
     <Button
@@ -59,7 +60,7 @@
         android:gravity="left"
         android:onClick="alternate_handler"
         android:paddingLeft="20px"
-
+        android:paddingTop="20px"
         />
 
     <ImageView
@@ -68,8 +69,9 @@
         android:layout_width="match_parent"
         android:layout_height="100px"
         android:background="#FFFFFF"
-        android:backgroundTint="#FFFFFF">
-        </ImageView>
+        android:backgroundTint="#FFFFFF"
+        />
+
 
     <Button
         android:id="@+id/flash_button"

@@ -476,13 +476,11 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
         Boolean owned = false;
 
         //check area for free flash, shared prefs
-        /*
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.userpref), Context.MODE_PRIVATE);
         String defaultValue = "";
         if (selectedStoreId.equals(sharedPref.getString(getString(R.string.freeFlashString), defaultValue)) ){
             owned = true;
         }
-        */
 
         //then check against stored owned cheers
         if (listOfOwnedPatterns().contains( selectedStoreId )) {
@@ -684,12 +682,13 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked OK button
                 //store in shared preferences
-                /*
+
                 SharedPreferences sharedPref = getSharedPreferences(getString(R.string.userpref), Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putString(getString(R.string.freeFlashString), selectedStoreId);
                 editor.apply();
 
+                /*
                 //put shared preferences in backup
                 BackupManager backupManager = new BackupManager(getBaseContext());
                 backupManager.dataChanged();
