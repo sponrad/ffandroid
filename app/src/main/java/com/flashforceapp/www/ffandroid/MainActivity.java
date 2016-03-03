@@ -272,7 +272,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
         new GetOffset().execute();
         new GetOffset().execute();
         new GetOffset().execute();
-        //TODO: average the offsets  into avgOffset at completion of GetOffsets. just use most recent in flashactivity
+        //TODO: average the offsets into avgOffset at completion of GetOffsets. just use most recent in flashactivity
 
         //revert to static image
         //imagebutton.setBackgroundResource(R.drawable.flashforwardthreeboxes);
@@ -284,8 +284,11 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
             try {
                 loadDatabase();
 
-                //TODO: enable load owned purchases
+                //enable load owned purchases
                 bp.loadOwnedPurchasesFromGoogle();
+
+                //TODO: check for sharedprefs free cheer
+
                 Log.i("INFO","DATABASE LOADED");
             } catch (IOException e) {
                 //report on this
@@ -688,11 +691,9 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
                 editor.putString(getString(R.string.freeFlashString), selectedStoreId);
                 editor.apply();
 
-                /*
                 //put shared preferences in backup
                 BackupManager backupManager = new BackupManager(getBaseContext());
                 backupManager.dataChanged();
-                */
 
                 //store in ownedpatterns and freepattern
                 SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
