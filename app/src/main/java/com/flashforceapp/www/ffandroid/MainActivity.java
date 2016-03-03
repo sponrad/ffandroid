@@ -171,12 +171,17 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
 
             Cursor c = db.rawQuery("SELECT * FROM patterns WHERE storecode='" + sku + "'", null);
             if (c.getCount() > 0){
-                c.moveToLast();
-                String id = c.getString(c.getColumnIndex("id"));
-                String name = c.getString(c.getColumnIndex("name"));
-                db.execSQL("insert into ownedpatterns values(NULL,'"+sku+"','"+name+"','"+id+"')");
+                c.moveToFirst();
+                while (!c.isAfterLast()){
+                    String id = c.getString(c.getColumnIndex("id"));
+                    String name = c.getString(c.getColumnIndex("name"));
+                    db.execSQL("insert into ownedpatterns values(NULL,'"+sku+"','"+name+"','"+id+"')");
+                    c.moveToNext();
+                }
             }
             c.close();
+            c.moveToFirst();
+
         }
 
         db.close();
@@ -272,7 +277,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
         new GetOffset().execute();
         new GetOffset().execute();
         new GetOffset().execute();
-        //TODO: average the offsets into avgOffset at completion of GetOffsets. just use most recent in flashactivity
+        // average the offsets into avgOffset at completion of GetOffsets. just use most recent in flashactivity
 
         //revert to static image
         //imagebutton.setBackgroundResource(R.drawable.flashforwardthreeboxes);
