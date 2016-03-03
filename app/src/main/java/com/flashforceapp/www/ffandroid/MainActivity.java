@@ -305,6 +305,9 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
                         Log.i("INFO", "AND IT'S ALREADY IN");
                     }
                 }
+                else {
+                    Log.i("INFO", "NO STORECODE IN SHARED PREFERENCES");
+                }
 
                 Log.i("INFO","DATABASE LOADED");
             } catch (IOException e) {
@@ -363,9 +366,9 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
         //db.execSQL("insert into offsets values (NULL, '0.0','0.0')");
 
         db.close();
-        am.close();
-        is.close();
-        buffer.close();
+        //am.close();
+        //is.close();
+        //buffer.close();
 
         ffdbLoaded = true;
     }
