@@ -173,9 +173,11 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
             if (c.getCount() > 0){
                 c.moveToFirst();
                 while (!c.isAfterLast()){
-                    String id = c.getString(c.getColumnIndex("id"));
-                    String name = c.getString(c.getColumnIndex("name"));
-                    db.execSQL("insert into ownedpatterns values(NULL,'"+sku+"','"+name+"','"+id+"')");
+                    if (!listOfOwnedPatterns().contains( sku )) {
+                        String id = c.getString(c.getColumnIndex("id"));
+                        String name = c.getString(c.getColumnIndex("name"));
+                        db.execSQL("insert into ownedpatterns values(NULL,'"+sku+"','"+name+"','"+id+"')");
+                    }
                     c.moveToNext();
                 }
             }
