@@ -292,17 +292,30 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
                 //enable load owned purchases
                 bp.loadOwnedPurchasesFromGoogle();
 
-                //TODO: check for sharedprefs free cheer
+                //TODO: check for sharedprefs free cheer. Request restore of SharedPrefs, then on success run the SharedPref stuff below
                 SharedPreferences sharedPref = getSharedPreferences(getString(R.string.userpref), Context.MODE_PRIVATE);
                 String defaultValue = "none";
                 String freeflashstorecode = sharedPref.getString(getString(R.string.freeFlashString), defaultValue);
                 if (!freeflashstorecode.equals(defaultValue)){
                     Log.i("INFO", "GOT A STORECODE FROM SHARED PREFERENCES");
+                    Log.i("INFO", "STORECODE: " + freeflashstorecode);
+
                     if (!listOfOwnedPatterns().contains(freeflashstorecode)){
-                        Log.i("INFO", "AND IT IS NOT IN THE OWNED PATTERNS YET");
+                        Log.i("INFO", "STORECODE; AND IT IS NOT IN THE OWNED PATTERNS YET");
+
+                        SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
+                        Cursor c = db.rawQuery("SELECT * FROM patterns WHERE storecode='" + freeflashstorecode + "'", null);
+                        if (c.getCount() > 0){
+                            c.moveToLast();
+                            String id = c.getString(c.getColumnIndex("id"));
+                            String name = c.getString(c.getColumnIndex("name"));
+                            db.execSQL("insert into ownedpatterns values(NULL,'"+freeflashstorecode+"','"+name+"','"+id+"')");
+                        }
+                        c.close();
+                        db.close();
                     }
                     else {
-                        Log.i("INFO", "AND IT'S ALREADY IN");
+                        Log.i("INFO", "STORECODE; AND IT'S ALREADY IN");
                     }
                 }
                 else {
