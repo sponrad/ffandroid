@@ -10,7 +10,7 @@
     <string name="freeFlashString">ffb006</string>
     <string name="dbVersionString">ffdb02</string>
     <string name="userpref">com.flashforceapp.www.ffandroid.userPrefString</string>
-    <string name="prefkey">PrefKey</string>
+    <string name="prefkey">PrefKeycom.flashforceapp.www.ffandroid.userpref</string>
 
     <string name="textpurchasing">Purchasing</string>
     <string name="textflash">Flash</string>
