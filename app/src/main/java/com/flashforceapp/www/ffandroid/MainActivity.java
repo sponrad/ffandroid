@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
     BillingProcessor bp;
     //public double avgOffset = 0.0;
     //public List<Double> offsets = new ArrayList<Double>();
-    public String patternid = "";
+    public String patternid = "basevalue";
     public String team = "";
     public boolean ffdbLoaded = false;
     public String selectedStoreId = "";
@@ -280,7 +280,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
     }
 
     public void checkDatabase() {
-        if (patternid.equals("")) {
+        if (patternid.equals("basevalue")) {
             try {
                 loadDatabase();
 
@@ -453,7 +453,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
     }
 
     public void updateDisplay(){
-        if (patternid.equals("")){
+        if (patternid.equals("basevalue")){
             //no pattern selected
             Button team_button = (Button) findViewById(R.id.team_button);
             Button outfit_button = (Button) findViewById(R.id.outfit_button);
@@ -678,7 +678,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
 
     public void purchaseFreeFlash(){
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         // Add the buttons
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
