@@ -182,8 +182,6 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
                 }
             }
             c.close();
-            c.moveToFirst();
-
         }
 
         db.close();
@@ -295,6 +293,18 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
                 bp.loadOwnedPurchasesFromGoogle();
 
                 //TODO: check for sharedprefs free cheer
+                SharedPreferences sharedPref = getSharedPreferences(getString(R.string.userpref), Context.MODE_PRIVATE);
+                String defaultValue = "none";
+                String freeflashstorecode = sharedPref.getString(getString(R.string.freeFlashString), defaultValue);
+                if (!freeflashstorecode.equals(defaultValue)){
+                    Log.i("INFO", "GOT A STORECODE FROM SHARED PREFERENCES");
+                    if (!listOfOwnedPatterns().contains(freeflashstorecode)){
+                        Log.i("INFO", "AND IT IS NOT IN THE OWNED PATTERNS YET");
+                    }
+                    else {
+                        Log.i("INFO", "AND IT'S ALREADY IN");
+                    }
+                }
 
                 Log.i("INFO","DATABASE LOADED");
             } catch (IOException e) {
@@ -353,6 +363,9 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
         //db.execSQL("insert into offsets values (NULL, '0.0','0.0')");
 
         db.close();
+        am.close();
+        is.close();
+        buffer.close();
 
         ffdbLoaded = true;
     }
