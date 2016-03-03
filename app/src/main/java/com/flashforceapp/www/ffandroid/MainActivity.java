@@ -292,6 +292,8 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
                 //enable load owned purchases
                 bp.loadOwnedPurchasesFromGoogle();
 
+                //TODO: Request restore of SharedPref
+
                 //TODO: check for sharedprefs free cheer. Request restore of SharedPrefs, then on success run the SharedPref stuff below
                 SharedPreferences sharedPref = getSharedPreferences(getString(R.string.userpref), Context.MODE_PRIVATE);
                 String defaultValue = "none";
