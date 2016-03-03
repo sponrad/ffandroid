@@ -359,18 +359,18 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
         while ((line = buffer.readLine()) != null) {
             StringBuilder sb = new StringBuilder(str1);
             String[] str = line.split(",");
-            sb.append("'" + str[0] + "',");  //storecode
-            sb.append("'" + str[3] + "',");  //name
-            sb.append("'" + str[2] + "',");  //groupid
-            sb.append("'" + str[1] + "',");  //category
-            sb.append("'" + str[19] + "',");  //timing
-            sb.append("'" + str[5] + "',");  //price
-            sb.append("'" + str[6] + "',");  //pattern1
-            sb.append("'" + str[7] + "',");  //pattern2
-            sb.append("'" + str[8] + "',");  //pattern3
-            sb.append("'" + str[9] + "',");  //pattern4
-            sb.append("'" + str[10] + "',");  //pattern5
-            sb.append("'" + str[4] + "'");  //alternate text
+            sb.append("'" + str[0].trim() + "',");  //storecode
+            sb.append("'" + str[3].trim() + "',");  //name
+            sb.append("'" + str[2].trim() + "',");  //groupid
+            sb.append("'" + str[1].trim() + "',");  //category
+            sb.append("'" + str[19].trim() + "',");  //timing
+            sb.append("'" + str[5].trim() + "',");  //price
+            sb.append("'" + str[6].trim() + "',");  //pattern1
+            sb.append("'" + str[7].trim() + "',");  //pattern2
+            sb.append("'" + str[8].trim() + "',");  //pattern3
+            sb.append("'" + str[9].trim() + "',");  //pattern4
+            sb.append("'" + str[10].trim() + "',");  //pattern5
+            sb.append("'" + str[4].trim() + "'");  //alternate text
             sb.append(str2);
             db.execSQL(sb.toString());
         }
@@ -528,7 +528,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
             owned = true;
         }
 
-        if (selectedPrice.equals("0.0") ){
+        if (selectedPrice.equals("0") ){
             owned = true;
         }
 
