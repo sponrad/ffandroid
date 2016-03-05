@@ -285,7 +285,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
     }
 
     public void checkDatabase() {
-        if (patternid.equals("basevalue")) {
+        if (patternid == null || patternid.equals("basevalue")) {
             try {
                 loadDatabase();
 
@@ -494,7 +494,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
     }
 
     public void updateDisplay(){
-        if (patternid.equals("basevalue")){
+        if (patternid == null || patternid.equals("basevalue")){
             //no pattern selected
             Button team_button = (Button) findViewById(R.id.team_button);
             Button outfit_button = (Button) findViewById(R.id.outfit_button);
