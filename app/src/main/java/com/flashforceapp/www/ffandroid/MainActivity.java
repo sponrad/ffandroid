@@ -292,9 +292,10 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
                 //enable load owned purchases
                 bp.loadOwnedPurchasesFromGoogle();
 
-                //TODO: Request restore of SharedPref
+                //Request restore of SharedPref? should not be needed apparently
+                //http://developer.android.com/guide/topics/data/backup.html#RequestingRestore
 
-                //TODO: check for sharedprefs free cheer. Request restore of SharedPrefs, then on success run the SharedPref stuff below
+                //check for sharedprefs free cheer
                 SharedPreferences sharedPref = getSharedPreferences(getString(R.string.userpref), Context.MODE_PRIVATE);
                 String defaultValue = "none";
                 String freeflashstorecode = sharedPref.getString(getString(R.string.freeFlashString), defaultValue);
@@ -312,6 +313,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
                             String id = c.getString(c.getColumnIndex("id"));
                             String name = c.getString(c.getColumnIndex("name"));
                             db.execSQL("insert into ownedpatterns values(NULL,'"+freeflashstorecode+"','"+name+"','"+id+"')");
+                            db.execSQL("insert into freepattern values(NULL,'"+freeflashstorecode+"','"+name+"','"+String.valueOf(patternid)+"')");
                         }
                         c.close();
                         db.close();
