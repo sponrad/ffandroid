@@ -41,6 +41,7 @@ import org.json.JSONTokener;
 import java.io.BufferedReader;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -295,6 +296,44 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
 
                 //enable load owned purchases
                 bp.loadOwnedPurchasesFromGoogle();
+
+                //check for free cheer in external storage
+                if (isExternalStorageWritable()) {
+                    try {
+                        File sdCard = Environment.getExternalStorageDirectory();
+                        File directory = new File(sdCard.getAbsolutePath() + "/ff");
+                        File file = new File(directory, getString(R.string.freeflashfile));
+
+                        FileInputStream fin = new FileInputStream(file);
+
+                        BufferedReader r = new BufferedReader(new InputStreamReader(fin));
+                        StringBuilder total = new StringBuilder();
+                        String line;
+                        while ((line = r.readLine()) != null) {
+                            total.append(line);
+                        }
+
+                        String freeFlashStorecode = total.toString();
+                        Log.i("INFO", "STORECODE: GOT IT FROM EX STORAGE");
+                        Log.i("INFO", "STORECODE: " + freeFlashStorecode);
+
+                        SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
+                        Cursor c = db.rawQuery("SELECT * FROM patterns WHERE storecode='" + freeFlashStorecode + "'", null);
+                        if (c.getCount() > 0){
+                            c.moveToLast();
+                            String id = c.getString(c.getColumnIndex("id"));
+                            String name = c.getString(c.getColumnIndex("name"));
+                            db.execSQL("insert into ownedpatterns values(NULL,'"+freeFlashStorecode+"','"+name+"','"+id+"')");
+                            db.execSQL("insert into freepattern values(NULL,'"+freeFlashStorecode+"','"+name+"','"+String.valueOf(patternid)+"')");
+                        }
+                        c.close();
+                        db.close();
+                        fin.close();
+                    } catch (IOException e){
+                        e.printStackTrace();
+                    }
+
+                }
 
                 //Request restore of SharedPref? should not be needed apparently
                 //http://developer.android.com/guide/topics/data/backup.html#RequestingRestore
