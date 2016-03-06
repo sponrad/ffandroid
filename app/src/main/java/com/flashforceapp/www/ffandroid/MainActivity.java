@@ -18,6 +18,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,9 +40,12 @@ import org.json.JSONTokener;
 
 import java.io.BufferedReader;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -735,13 +739,16 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
                 BackupManager backupManager = new BackupManager(getBaseContext());
                 backupManager.dataChanged();
 
+
+
                 //store in ownedpatterns and freepattern
                 SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
 
+                String storecode = "";
                 Cursor c = db.rawQuery("SELECT * FROM patterns WHERE id='" + patternid + "'", null);
                 if (c.getCount() > 0){
                     c.moveToLast();
-                    String storecode = c.getString(c.getColumnIndex("storecode"));
+                    storecode = c.getString(c.getColumnIndex("storecode"));
                     String name = c.getString(c.getColumnIndex("name"));
                     db.execSQL("insert into ownedpatterns values(NULL,'"+storecode+"','"+name+"','"+String.valueOf(patternid)+"')");
                     db.execSQL("insert into freepattern values(NULL,'"+storecode+"','"+name+"','"+String.valueOf(patternid)+"')");
@@ -749,9 +756,31 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
                 c.close();
                 db.close();
 
+                //store in external memory
+                if (isExternalStorageWritable()) {
+                    try {
+                        //This will get the SD Card directory and create a folder named MyFiles in it.
+                        File sdCard = Environment.getExternalStorageDirectory();
+                        File directory = new File(sdCard.getAbsolutePath() + "/ff");
+                        directory.mkdirs();
+
+                        //Now create the file in the above directory and write the contents into it
+                        File file = new File(directory, getString(R.string.freeflashfile));
+                        FileOutputStream fOut = new FileOutputStream(file);
+                        OutputStreamWriter osw = new OutputStreamWriter(fOut);
+                        osw.write(storecode);
+                        osw.flush();
+                        osw.close();
+                    } catch (IOException e){
+                        e.printStackTrace();
+                    }
+
+                }
+
                 actionButtonStatus = "flash";
                 Button flash_button = (Button) findViewById(R.id.flash_button);
                 flash_button.setText(getString(R.string.textflash));
+
 
             }
         });
@@ -768,5 +797,13 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
         AlertDialog dialog = builder.create();
         dialog.show();
 
+    }
+
+    public boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return true;
+        }
+        return false;
     }
 }

@@ -18,4 +18,5 @@
     <string name="cancel">Cancel</string>
     <string name="ok">Ok</string>
     <string name="freepurchaseprompt">Do you want to use your one free flash for this product?</string>
+    <string name="freeflashfile">fffree.txt</string>
 </resources>
