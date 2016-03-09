@@ -38,6 +38,10 @@ public class FlashActivity extends AppCompatActivity {
         //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);  //does not work
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 
+        WindowManager.LayoutParams layout = getWindow().getAttributes();
+        layout.screenBrightness = 1F;
+        getWindow().setAttributes(layout);
+
         Log.i("INFO", "started FlashActivity");
         setContentView(R.layout.activity_flash);
 
