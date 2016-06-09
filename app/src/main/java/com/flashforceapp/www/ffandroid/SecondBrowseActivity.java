@@ -37,12 +37,12 @@ public class SecondBrowseActivity extends AppCompatActivity {
         SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
 
         if (category != null && category.equals("My Flashes")){
-            Cursor c = db.rawQuery("SELECT name, patternid FROM ownedpatterns GROUP BY name ORDER BY name", null);
+            Cursor c = db.rawQuery("SELECT ownedpatterns.name, patterns.id FROM ownedpatterns INNER JOIN patterns ON ownedpatterns.storecode = patterns.storecode GROUP BY name ORDER BY name", null);
             if (c.getCount() > 0) {
                 c.moveToFirst();
                 while (!c.isAfterLast()) {
-                    values.add(c.getString(c.getColumnIndex("name")));
-                    patternids.add(c.getString(c.getColumnIndex("patternid")));
+                    values.add(c.getString(c.getColumnIndex("ownedpatterns.name")));
+                    patternids.add(c.getString(c.getColumnIndex("patterns.id")));
                     c.moveToNext();
                 }
             }
