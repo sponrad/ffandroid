@@ -399,7 +399,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
         String line;
         String str1 = "insert into patterns values(NULL,";
         String str2 = ");";
-
+        int count = 0;
         db.beginTransaction();
         while ((line = buffer.readLine()) != null) {
             StringBuilder sb = new StringBuilder(str1);
@@ -418,6 +418,8 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
             sb.append("'" + str[4].trim() + "'");  //alternate text
             sb.append(str2);
             db.execSQL(sb.toString());
+            count += 1;
+            Log.i("INFO", Integer.toString(count));
         }
         db.setTransactionSuccessful();
         db.endTransaction();
