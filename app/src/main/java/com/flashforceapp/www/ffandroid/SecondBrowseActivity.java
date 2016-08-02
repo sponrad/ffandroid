@@ -16,6 +16,7 @@ import java.util.List;
 public class SecondBrowseActivity extends AppCompatActivity {
     ListView listView ;
     List<String> patternids = new ArrayList<>();
+    String category = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +25,6 @@ public class SecondBrowseActivity extends AppCompatActivity {
 
         // Get ListView object from xml
         listView = (ListView) findViewById(R.id.list);
-        String category = "";
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -86,13 +86,30 @@ public class SecondBrowseActivity extends AppCompatActivity {
                 // ListView Clicked item index
                 //int itemPosition = position;
 
-                // ListView Clicked item value
-                String  itemValue = (String) listView.getItemAtPosition(position);
+                if (category.contains("Schools:")) {
+                    Intent intent = new Intent(getApplicationContext(), AlternateActivity.class);
+                    SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
 
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                intent.putExtra("PATTERNID", patternids.get(position));
-                intent.putExtra("TEAM", itemValue);
-                startActivity(intent);
+                    Cursor c = db.rawQuery("SELECT * FROM patterns WHERE id='" + patternids.get(position) + "'", null);
+                    c.moveToLast();
+
+                    String group_id = c.getString(c.getColumnIndex("groupid"));
+
+                    c.close();
+                    db.close();
+
+                    intent.putExtra("GROUPID", group_id );
+                    startActivity(intent);
+                }
+                else {
+                    // ListView Clicked item value
+                    String itemValue = (String) listView.getItemAtPosition(position);
+
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    intent.putExtra("PATTERNID", patternids.get(position));
+                    intent.putExtra("TEAM", itemValue);
+                    startActivity(intent);
+                }
 
             }
 

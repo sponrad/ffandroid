@@ -17,6 +17,7 @@ public class AlternateActivity extends AppCompatActivity {
     ListView listView ;
     List<String> patternids = new ArrayList<>();
     String team = "";
+    String group_id = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +26,6 @@ public class AlternateActivity extends AppCompatActivity {
 
         // Get ListView object from xml
         listView = (ListView) findViewById(R.id.list);
-        String group_id = "";
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
