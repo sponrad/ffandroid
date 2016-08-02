@@ -86,7 +86,7 @@ public class SecondBrowseActivity extends AppCompatActivity {
                 // ListView Clicked item index
                 //int itemPosition = position;
 
-                if (category.contains("Schools:")) {
+                if (category.contains("Schools")) {
                     Intent intent = new Intent(getApplicationContext(), AlternateActivity.class);
                     SQLiteDatabase db = openOrCreateDatabase("ff.db", MODE_PRIVATE, null);
 
