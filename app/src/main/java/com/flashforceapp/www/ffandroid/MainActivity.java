@@ -230,6 +230,8 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
                 purchaseFreeFlash();
                 break;
             default:
+                Intent browseIntent = new Intent(this, BrowseActivity.class);
+                startActivity(browseIntent);
                 break;
         }
     }

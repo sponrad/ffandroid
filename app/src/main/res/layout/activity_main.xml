@@ -80,7 +80,7 @@
         android:layout_height="60dp"
         android:background="#1392DC"
         android:textAllCaps="false"
-        android:text=""
+        android:text="Browse"
         android:textColor="#FFFFFF"
         android:gravity="center"
         android:textSize="@dimen/button_text_size"
